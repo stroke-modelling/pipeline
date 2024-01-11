@@ -13,7 +13,8 @@ INFO:pipeline:    obj_name: str
 INFO:pipeline:  )
 INFO:pipeline:With these parameters:
 INFO:pipeline:  obj={unnamed pd.DataFrame},
-INFO:pipeline:  obj_name=raw data
+INFO:pipeline:  obj_name=raw data,
+INFO:pipeline:
 INFO:pipeline:Giving the following as output:
 INFO:pipeline:  raw data
 INFO:pipeline:
@@ -27,7 +28,8 @@ INFO:pipeline:    obj_name: str
 INFO:pipeline:  )
 INFO:pipeline:With these parameters:
 INFO:pipeline:  obj={unnamed pd.DataFrame},
-INFO:pipeline:  obj_name=cleaned data
+INFO:pipeline:  obj_name=cleaned data,
+INFO:pipeline:
 INFO:pipeline:Giving the following as output:
 INFO:pipeline:  cleaned data
 INFO:pipeline:
@@ -37,9 +39,9 @@ INFO:pipeline:Contents:
 INFO:pipeline:  patient_id,
 INFO:pipeline:  treated
 INFO:pipeline:
-INFO:pipeline:###################
-INFO:pipeline:##### Process #####
-INFO:pipeline:###################
+INFO:pipeline:############################
+INFO:pipeline:##### Process the data #####
+INFO:pipeline:############################
 INFO:pipeline:
 INFO:pipeline:* Age: combine multiple columns.
 INFO:pipeline:--------------------------------
@@ -50,8 +52,9 @@ INFO:pipeline:    df: pandas.core.frame.DataFrame,
 INFO:pipeline:    columns: list
 INFO:pipeline:  )
 INFO:pipeline:With these parameters:
+INFO:pipeline:,
 INFO:pipeline:  df=raw data,
-INFO:pipeline:  columns=[
+INFO:pipeline:    columns=[
 INFO:pipeline:    'AgeUnder40',
 INFO:pipeline:    'Age40to44',
 INFO:pipeline:    'Age45to49',
@@ -64,7 +67,8 @@ INFO:pipeline:    'Age75to79',
 INFO:pipeline:    'Age80to84',
 INFO:pipeline:    'Age85to89',
 INFO:pipeline:    'AgeOver90'
-INFO:pipeline:    ]
+INFO:pipeline:    ],
+INFO:pipeline:    
 INFO:pipeline:Giving the following as output:
 INFO:pipeline:  removed_one_hot
 INFO:pipeline:Store a name for this object in its attrs dict or as Series name.
@@ -75,7 +79,8 @@ INFO:pipeline:    obj_name: str
 INFO:pipeline:  )
 INFO:pipeline:With these parameters:
 INFO:pipeline:  obj=removed_one_hot,
-INFO:pipeline:  obj_name=age_combined_columns
+INFO:pipeline:  obj_name=age_combined_columns,
+INFO:pipeline:
 INFO:pipeline:Giving the following as output:
 INFO:pipeline:  age_combined_columns
 INFO:pipeline:
@@ -88,8 +93,9 @@ INFO:pipeline:    series: pandas.core.series.Series,
 INFO:pipeline:    dict_map: dict
 INFO:pipeline:  )
 INFO:pipeline:With these parameters:
+INFO:pipeline:,
 INFO:pipeline:  series=age_combined_columns,
-INFO:pipeline:  dict_map={
+INFO:pipeline:    dict_map={
 INFO:pipeline:    'AgeUnder40': 37.5,
 INFO:pipeline:    'Age40to44': 42.5,
 INFO:pipeline:    'Age45to49': 47.5,
@@ -102,7 +108,8 @@ INFO:pipeline:    'Age75to79': 77.5,
 INFO:pipeline:    'Age80to84': 82.5,
 INFO:pipeline:    'Age85to89': 87.5,
 INFO:pipeline:    'AgeOver90': 92.5
-INFO:pipeline:    }
+INFO:pipeline:    },
+INFO:pipeline:    
 INFO:pipeline:Giving the following as output:
 INFO:pipeline:  age_combined_columns
 INFO:pipeline:
@@ -123,7 +130,8 @@ INFO:pipeline:    dict_map: dict
 INFO:pipeline:  )
 INFO:pipeline:With these parameters:
 INFO:pipeline:  series=S1Gender,
-INFO:pipeline:  dict_map={'M': 1, 'F': 0}
+INFO:pipeline:  dict_map={'M': 1, 'F': 0},
+INFO:pipeline:
 INFO:pipeline:Giving the following as output:
 INFO:pipeline:  S1Gender
 INFO:pipeline:
@@ -144,8 +152,9 @@ INFO:pipeline:    series: pandas.core.series.Series,
 INFO:pipeline:    dict_map: dict
 INFO:pipeline:  )
 INFO:pipeline:With these parameters:
+INFO:pipeline:,
 INFO:pipeline:  series=FirstArrivalTime,
-INFO:pipeline:  dict_map={
+INFO:pipeline:    dict_map={
 INFO:pipeline:    '0000to3000': 0,
 INFO:pipeline:    '0300to0600': 3,
 INFO:pipeline:    '0600to0900': 6,
@@ -154,7 +163,8 @@ INFO:pipeline:    '1200to1500': 12,
 INFO:pipeline:    '1500to1800': 15,
 INFO:pipeline:    '1800to2100': 18,
 INFO:pipeline:    '2100to2400': 21
-INFO:pipeline:    }
+INFO:pipeline:    },
+INFO:pipeline:    
 INFO:pipeline:Giving the following as output:
 INFO:pipeline:  FirstArrivalTime
 INFO:pipeline:

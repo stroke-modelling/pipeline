@@ -1,9 +1,12 @@
 """
 Functions to log processes.
 
-
-    # Have to find the following outside of any other functions
-    # to prevent RecursionError.
+Most of the pipeline functions will have the same few lines
+of calls to these log functions within them. This is annoying
+but necessary as placing the copied lines in their own function
+results in RecursionError. The alternative is forcing the user
+to call every function in the form of log(function, parameter_list)
+which is harder to read and to reuse elsewhere without the log.
 """
 import pandas as pd
 import logging
@@ -61,9 +64,12 @@ def log_step(str: str):
         pass
 
 
-def log_text(str: str, indent: str=''):
+def log_text(str: str, indent: str = '', w=100):
     """
     Add a message to the log.
+
+    If the message is above the set width then it will be split
+    across multiple lines.
     """
     if len(indent) > 0:
         str = indent + str.replace('\n', f'\n{indent}')
@@ -72,7 +78,7 @@ def log_text(str: str, indent: str=''):
         # If logging is set up, save to log:
         logger = logging.getLogger('pipeline')
         for line in str.split('\n'):
-            width = 100 - len('INFO:pipeline:')
+            width = w - len('INFO:pipeline:')
             if len(line) < width:
                 logger.info(line)
             else:
@@ -95,26 +101,35 @@ def log_dataframe_columns(df):
     str = ''.join([
         'Contents:\n  ',
         ',\n  '.join(df.columns)
-    ])
-    log_text(str, indent='')
+        ])
+    log_text(str)
 
 
 def log_function_info(func_module, func_name, func_doc, argspec_sig):
     """
-    TEMPORARY, DELETE ME
-    # --- Logging ---
-    # Record what's happened in the new series attributes.
-    # Starting DataFrame name:
-    """
-    # Find the module that contains this function.
-    # func_module = func.__module__
+    Log the function module, name, short docstring, and parameter names.
 
-    # Find the function name and description.
-    # func_name = func.__name__
+    Inputs
+    ------
+    func_module - str. The module that contains this function.
+    func_name   - str. The name of this function.
+    func_doc    - str. The docstring of this function.
+    argspec_sig - str. The (param1, param2...) part of the function.
+
+    Result:
+    -------
+    {first line of docstring}
+    Run this function:
+      {function module}.{function name}(
+        param1: type hint of param1,
+        param2: type hint of param2
+      )
+    """
     # Get the docstring as a list, line by line:
     try:
-        # func_doc_lines = func.__doc__.split('\n')
         func_doc_lines = func_doc.split('\n')
+        # Remove leading and trailing whitespace from each line:
+        func_doc_lines = [f.strip() for f in func_doc_lines]
     except AttributeError:
         # Hit this when the docstring is "NoneType" instead of
         # a string, i.e. there's no docstring for this function.
@@ -123,33 +138,36 @@ def log_function_info(func_module, func_name, func_doc, argspec_sig):
     if len(func_doc_lines) < 1:
         func_doc = '{missing docstring}'
     else:
-        # Remove leading and trailing whitespace from each line:
-        func_doc_lines = [f.strip() for f in func_doc_lines]
         # Store the first line of the docstring that isn't blank.
         i = 0
-        func_doc = func_doc_lines[i]
         success = False
-        while success == False:
-            i += 1
+        while not success:
             if i < len(func_doc_lines):
                 func_doc = func_doc_lines[i]
+                if len(func_doc) > 0:
+                    success = True
+                else:
+                    pass
             else:
                 # Nothing found. Break the loop.
                 success = True
-            if len(func_doc) > 0:
-                success = True
+                func_doc = ''
+            i += 1
 
     indent = ' ' * 2  # Number of spaces per indent
 
+    # Start of the function string:
     function_str = f'{func_module}.{func_name}('
-    function_str_bits = f'{argspec_sig}'.strip('(').strip(')').split(',')
-    function_str_bits = [f'{s.strip()}' for s in function_str_bits]
+    # Parameter names and types:
+    params_str_list = f'{argspec_sig}'.strip('(').strip(')').split(',')
+    params_str_list = [f'{s.strip()}' for s in params_str_list]
+    params_str = f',\n{indent*2}'.join(params_str_list)
+    # Everything together:
     function_str = (
-        f'{indent}{function_str}' +
-        f'\n{indent*2}' +
-        f',\n{indent*2}'.join(function_str_bits) +
-        f'\n{indent})'
-        ) 
+        f'{indent}{function_str}\n' +
+        f'{indent*2}{params_str}\n' +
+        f'{indent})'
+        )
 
     # If logging is set up, save to log:
     log_text('\n'.join([
@@ -161,9 +179,13 @@ def log_function_info(func_module, func_name, func_doc, argspec_sig):
 
 def log_function_params(fullargspec, kwargs):
     """
-    # --- Logging ---
-    # Record what's happened in the new series attributes.
-    # Starting DataFrame name:
+    Log the names and values of parameters passed to the function.
+
+    Result:
+    -------
+    With these parameters:
+      param1={value or name of param1}
+      param2={value or name of param2}
     """
     # Check the value of each kwarg.
     kwarg_names = {}
@@ -175,17 +197,15 @@ def log_function_params(fullargspec, kwargs):
 
     # Get one line per arg or kwarg,
     # "  name=value"
-    lines = []
+    params_str = ''
     for a, arg in enumerate(fullargspec[0]):
         try:
             val = kwarg_names[arg]
         except KeyError:
-            val='None'
-        lines.append(f'{indent}{arg}={val}')
+            val = 'None'
+        params_str += f'{indent}{arg}={val},\n'
 
-    lines_w = newline_for_width(lines, w=100)
-
-    params_str = ',\n'.join(lines_w)
+    params_str = _newline_for_width(params_str, w=100)
 
     # If logging is set up, save to log:
     log_text('\n'.join([
@@ -196,9 +216,13 @@ def log_function_params(fullargspec, kwargs):
 
 def log_function_output(return_tuple):
     """
-    # --- Logging ---
-    # Record what's happened in the new series attributes.
-    # Starting DataFrame name:
+    Log the names and values of parameters returned by the function.
+
+    Result:
+    -------
+    Giving the following as output:
+      {value or name of result1}
+      {value or name of result2}
     """
     indent = ' ' * 2  # Number of spaces per indent
 
@@ -208,7 +232,7 @@ def log_function_output(return_tuple):
         arg_name = find_arg_name(arg)
         lines.append(f'{indent}{arg_name}')
 
-    lines_w = newline_for_width(lines, w=100)
+    lines_w = _newline_for_width(lines, w=100)
 
     outputs_str = ',\n'.join(lines_w)
 
@@ -219,38 +243,60 @@ def log_function_output(return_tuple):
     ]))
 
 
-def newline_for_width(lines, w=100, indent='  '):
+# ############################
+# ##### Helper functions #####
+# ############################
+def _newline_for_width(line: str, w: int = 100, indent: str = '  '):
     """
-    
-    # Maximum number of characters per line:
-    w = 100
+    Keep line width down by splitting at brackets and commas.
+
+    This needs fixing - results currently mixed.
+
+    Inputs
+    ------
+    line   - str. str to shorten.
+    w      - int. Maximum number of characters per line:
+    indent - str. Plonked on the start of each new line.
     """
     # Make sure lines don't go above a certain length.
-    lines_w = []
-    for line in lines:
-        if len(line) < w:
-            # No problem, use the line as it is.
-            lines_w.append(line)
-        else:
-            # Make a new line whenever there's an open bracket:
-            line = increase_indent_between_brackets(line)
+    if len(line) < w:
+        # No problem, use the line as it is.
+        return line
+    else:
+        line_w = ''
+        # Make a new line whenever there's an open bracket:
+        line = _increase_indent_between_brackets(line)
 
-            # At every comma, create a new line.
-            lines_c = line.split(',')
-            for l, lc in enumerate(lines_c):
-                if l > 0:
-                    # If this isn't the first line
-                    # (which is the parameter name and already has whitespace)
-                    # Remove leading and trailing whitespace:
-                    lc = lc.strip()
-                # Add indent:
-                i = '' if l < 1 else indent * 2
-                # Save indented line to list:
-                lines_w.append(f'{i}{lc}')
-    return lines_w
+        # At every comma, create a new line.
+        lines_c = line.split(',')
+        for l, lc in enumerate(lines_c):
+            if l > 0:
+                # If this isn't the first line
+                # (which is the parameter name and already has whitespace)
+                # Remove leading and trailing whitespace:
+                lc = lc.strip()
+                # lc = f',\n{i}{lc}'
+            # Add indent:
+            i = '' if l < 1 else indent * 2
+            # Save indented line to list:
+            line_w += f',\n{i}{lc}'
+    return line_w
 
 
-def find_arg_name(arg):
+def find_arg_name(arg: any):
+    """
+    Find the name stored in attrs or as Series name.
+
+    Inputs
+    ------
+    arg - any. Object that we want to find the name of.
+
+    Returns
+    -------
+    arg_name - str. The name if possible, or a placeholder name
+               to prevent printing a huge or sensitive data file,
+               or if all else fails then just the value itself.
+    """
     if isinstance(arg, pd.Series):
         # This is a pandas Series.
         # Take the name of the Series:
@@ -277,11 +323,15 @@ def find_arg_name(arg):
     return arg_name
 
 
-def increase_indent_between_brackets(line, indent='  '):
+def _increase_indent_between_brackets(line, indent='  '):
     """
     Currently gives fixed indentation level.
+
+    This needs fixing - currently has mixed results.
+    Ideally would want more indentation for more nested brackets.
     """
     def find_substring(s, ss):
+        """Find index in string s where substring ss first appears."""
         try:
             i = s.index(ss)
         except ValueError:
@@ -297,7 +347,8 @@ def increase_indent_between_brackets(line, indent='  '):
     while all(i < 0 for i in i_brackets) is False:
         # Until all values in i_brackets are -1.
         # Find the bracket that comes next in the string:
-        i_brackets_p = [i if i > 0 else max(i_brackets) + 1 for i in i_brackets]
+        i_brackets_p = [i if i > 0 else max(i_brackets) + 1
+                        for i in i_brackets]
         ind_next_bracket = i_brackets_p.index(min(i_brackets_p))
 
         c_next_bracket = bracket_list[ind_next_bracket]
@@ -327,6 +378,11 @@ def increase_indent_between_brackets(line, indent='  '):
 def set_attrs_name(obj: any, obj_name: str):
     """
     Store a name for this object in its attrs dict or as Series name.
+
+    Inputs
+    ------
+    obj      - any. e.g. a DataFrame or Series to rename.
+    obj_name - str. Name to be stored.
     """
     # * Log the function info and inputs:
     # -----------------------------------
