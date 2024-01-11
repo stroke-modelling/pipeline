@@ -2,57 +2,59 @@
 Run the example data.
 """
 import pandas as pd
+import logging
 
-from utils.log import log, write_to_log, set_attrs_name, print_dataframe_columns
-from utils.clean import remove_one_hot_encoding, rename_values
+from utils.log import log, log_heading, log_step, log_text, set_attrs_name, log_dataframe_columns
+from utils.clean import load_data, remove_one_hot_encoding, rename_values
 
 if __name__ == '__main__':
-    write_to_log(
-        'Example data cleaning',
-        heading=True
-    )
 
-    write_to_log(
-        'Import raw data.',
-        step_heading=True
-    )
+    create_log_file = True
+    if create_log_file:
+        # Name the logger so that later we can check whether
+        # it exists:
+        logger = logging.getLogger('pipeline')
+        logging.basicConfig(
+            filename='example2.log',
+            encoding='utf-8',
+            level=logging.DEBUG,
+            filemode='w'  # Overwrite the existing file
+            )
+    else:
+        # Don't set up logging.
+        pass
+
+    log_heading('Example data cleaning')
+    log_step('Import raw data.')
+
     dir_in = './input/'
     file_in = 'example_data.csv'
     name_raw_data = 'raw data'
-    df_raw = log(
-        pd.read_csv,
-        [f'{dir_in}{file_in}']
-    )
+    df_raw = load_data(f'{dir_in}{file_in}')
     # Rename this DataFrame for the log:
-    df_raw = log(
-        set_attrs_name,
-        [df_raw, name_raw_data]
-        )
+    # df_raw = log(
+    #     set_attrs_name,
+    #     [df_raw, name_raw_data]
+    #     )
+    df_raw = set_attrs_name(df_raw, name_raw_data)
+    # log(set_attrs_name, [df_raw, name_raw_data])
 
-    write_to_log(
-        'Set up cleaned output DataFrame.',
-        step_heading=True
-    )
+    log_step('Set up cleaned output DataFrame.')
     df_clean = pd.DataFrame()
 
     # Rename this DataFrame for the log:
     name_cleaned_data = 'cleaned data'
-    df_clean = log(
-        set_attrs_name,
-        [df_clean, name_cleaned_data]
-        )
+    # df_clean = log(
+    #     set_attrs_name,
+    #     [df_clean, name_cleaned_data]
+    #     )
+    df_clean = set_attrs_name(df_clean, name_cleaned_data)
 
     df_clean['patient_id'] = df_raw['patient_id']
     df_clean['treated'] = df_raw['treated']
 
-    write_to_log(
-        'Process',
-        heading=True
-    )
-    write_to_log(
-        'Age: combine multiple columns.',
-        step_heading=True
-        )
+    log_heading('Process')
+    log_step('Age: combine multiple columns.')
     columns_age = [
         'AgeUnder40',
         'Age40to44',
@@ -71,15 +73,13 @@ if __name__ == '__main__':
         remove_one_hot_encoding,
         [df_raw, columns_age]
         )
-    clean_series_age = log(
-        set_attrs_name,
-        [clean_series_age, 'age_combined_columns']
-        )
+    # clean_series_age = log(
+    #     set_attrs_name,
+    #     [clean_series_age, 'age_combined_columns']
+    #     )
+    clean_series_age = set_attrs_name(clean_series_age, 'age_combined_columns')
 
-    write_to_log(
-        'Age: change bands to average values.',
-        step_heading=True
-        )
+    log_step('Age: change bands to average values.')
     dict_map_age = {
         'AgeUnder40': 37.5,
         'Age40to44': 42.5,
@@ -99,32 +99,18 @@ if __name__ == '__main__':
         [clean_series_age, dict_map_age]
         )
     df_clean['age'] = clean_series_age
-    # Write the contents of the cleaned dataframe:
-    write_to_log(
-        'Update cleaned dataframe.',
-        step_heading=True
-        )
-    print_dataframe_columns(df_clean)
+    log_step('Update cleaned dataframe.')
+    log_dataframe_columns(df_clean)
 
-    write_to_log(
-        'Sex: change M/F to 1/0.',
-        step_heading=True
-        )
+    log_step('Sex: change M/F to 1/0.')
     df_clean['sex'] = log(
         rename_values,
         [df_raw['S1Gender'], {'M': 1, 'F': 0}]
         )
-    # Write the contents of the cleaned dataframe:
-    write_to_log(
-        'Update cleaned dataframe.',
-        step_heading=True
-        )
-    print_dataframe_columns(df_clean)
+    log_step('Update cleaned dataframe.')
+    log_dataframe_columns(df_clean)
 
-    write_to_log(
-        'Arrival times: change bands to start values.',
-        step_heading=True
-        )
+    log_step('Arrival times: change bands to start values.')
     dict_map_arrival = {
         '0000to3000': 0,
         '0300to0600': 3,
@@ -139,28 +125,16 @@ if __name__ == '__main__':
         rename_values,
         [df_raw['FirstArrivalTime'], dict_map_arrival]
         )
-    # Write the contents of the cleaned dataframe:
-    write_to_log(
-        'Update cleaned dataframe.',
-        step_heading=True
-        )
-    print_dataframe_columns(df_clean)
+    log_step('Update cleaned dataframe.')
+    log_dataframe_columns(df_clean)
 
-    write_to_log(
-        'Result',
-        heading=True
-    )
-    # Write the contents of the dataframe:
-    write_to_log('Contents of cleaned dataframe.',
-        step_heading=True)
-    print_dataframe_columns(df_clean)
+    log_heading('Result')
+    log_step('Contents of cleaned dataframe.')
+    log_dataframe_columns(df_clean)
+
     # Save output to file.
     dir_out = './output/'
     file_out = 'data_cleaned.csv'
     df_clean.to_csv(f'{dir_out}{file_out}', index=False)
-    write_to_log(
-        'Save cleaned dataframe to file.',
-        step_heading=True
-        )
-    write_to_log(f'  {dir_out}{file_out}')
-
+    log_step('Save cleaned dataframe to file.')
+    log_text(f'{dir_out}{file_out}')

@@ -6,6 +6,11 @@ Assumes that the data is stored as a Pandas DataFrame object.
 import pandas as pd
 
 
+def load_data(path_to_file):
+    """Import tabular data from csv."""
+    return pd.read_csv(path_to_file)
+
+
 def remove_one_hot_encoding(df: pd.DataFrame, columns: list):
     """
     Convert one-hot-encoded DataFrame columns to one Series.
