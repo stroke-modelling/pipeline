@@ -4,6 +4,8 @@ Routines for cleaning input dataframe.
 Assumes that the data is stored as a Pandas DataFrame object.
 """
 import pandas as pd
+import inspect  # help find names for logging
+from utils.log import log_function_info, log_function_params, log_function_output
 
 
 def load_data(path_to_file):
@@ -47,6 +49,24 @@ def remove_one_hot_encoding(df: pd.DataFrame, columns: list):
              that had the highest value for that row. For one-hot-
              encoded data, expect all but one values in a row to be 0.
     """
+    # * Log the function info and inputs:
+    # -----------------------------------
+    args = locals()
+    f = remove_one_hot_encoding
+
+    log_function_info(
+        f.__module__,
+        f.__name__,
+        f.__doc__,
+        inspect.signature(f)
+        )
+    log_function_params(
+        inspect.getfullargspec(f),
+        args
+        )
+
+    # * The actual calculations:
+    # --------------------------
     # Extract columns
     col_extract: pd.DataFrame = df[columns]
     # Find which column contains the highest value for each patient.
@@ -57,7 +77,14 @@ def remove_one_hot_encoding(df: pd.DataFrame, columns: list):
 
     # Set the series name:
     series.name = 'removed_one_hot'
-    return series
+
+    # * Log the function outputs:
+    # ---------------------------
+    to_return = (series, )
+    log_function_output([t for t in to_return])
+    if len(to_return) == 1:
+        to_return = to_return[0]
+    return to_return
 
 
 def rename_values(series: pd.Series, dict_map: dict):
@@ -83,8 +110,30 @@ def rename_values(series: pd.Series, dict_map: dict):
 
     Example dictionary map to match gender M/F to 1/0:
       dict_map: dict = {'M': 1, 'F': 0}
-    """
+    """    
+    # * Log the function info and inputs:
+    # -----------------------------------
+    args = locals()
+    f = rename_values
+
+    log_function_info(
+        f.__module__,
+        f.__name__,
+        f.__doc__,
+        inspect.signature(f)
+        )
+    log_function_params(
+        inspect.getfullargspec(f),
+        args
+        )
     # The "series" object is not changed. The "renamed" object
     # is a copy of the "series" object with the values renamed.
     renamed: pd.Series = series.map(dict_map)
-    return renamed
+
+    # * Log the function outputs:
+    # ---------------------------
+    to_return = (renamed, )
+    log_function_output([t for t in to_return])
+    if len(to_return) == 1:
+        to_return = to_return[0]
+    return to_return

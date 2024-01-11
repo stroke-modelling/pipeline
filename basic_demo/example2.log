@@ -1,0 +1,185 @@
+INFO:pipeline:
+INFO:pipeline:#################################
+INFO:pipeline:##### Example data cleaning #####
+INFO:pipeline:#################################
+INFO:pipeline:
+INFO:pipeline:* Import raw data.
+INFO:pipeline:------------------
+INFO:pipeline:Store a name for this object in its attrs dict or as Series name.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.log.set_attrs_name(
+INFO:pipeline:    obj: <built-in function any>,
+INFO:pipeline:    obj_name: str
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  obj={unnamed pd.DataFrame},
+INFO:pipeline:  obj_name=raw data
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  raw data
+INFO:pipeline:
+INFO:pipeline:* Set up cleaned output DataFrame.
+INFO:pipeline:----------------------------------
+INFO:pipeline:Store a name for this object in its attrs dict or as Series name.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.log.set_attrs_name(
+INFO:pipeline:    obj: <built-in function any>,
+INFO:pipeline:    obj_name: str
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  obj={unnamed pd.DataFrame},
+INFO:pipeline:  obj_name=cleaned data
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  cleaned data
+INFO:pipeline:
+INFO:pipeline:* Update cleaned dataframe.
+INFO:pipeline:---------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  patient_id,
+INFO:pipeline:  treated
+INFO:pipeline:
+INFO:pipeline:###################
+INFO:pipeline:##### Process #####
+INFO:pipeline:###################
+INFO:pipeline:
+INFO:pipeline:* Age: combine multiple columns.
+INFO:pipeline:--------------------------------
+INFO:pipeline:Convert one-hot-encoded DataFrame columns to one Series.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.remove_one_hot_encoding(
+INFO:pipeline:    df: pandas.core.frame.DataFrame,
+INFO:pipeline:    columns: list
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  df=raw data,
+INFO:pipeline:  columns=[
+INFO:pipeline:    'AgeUnder40',
+INFO:pipeline:    'Age40to44',
+INFO:pipeline:    'Age45to49',
+INFO:pipeline:    'Age50to54',
+INFO:pipeline:    'Age55to59',
+INFO:pipeline:    'Age60to64',
+INFO:pipeline:    'Age65to69',
+INFO:pipeline:    'Age70to74',
+INFO:pipeline:    'Age75to79',
+INFO:pipeline:    'Age80to84',
+INFO:pipeline:    'Age85to89',
+INFO:pipeline:    'AgeOver90'
+INFO:pipeline:    ]
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  removed_one_hot
+INFO:pipeline:Store a name for this object in its attrs dict or as Series name.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.log.set_attrs_name(
+INFO:pipeline:    obj: <built-in function any>,
+INFO:pipeline:    obj_name: str
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  obj=removed_one_hot,
+INFO:pipeline:  obj_name=age_combined_columns
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  age_combined_columns
+INFO:pipeline:
+INFO:pipeline:* Age: change bands to average values.
+INFO:pipeline:--------------------------------------
+INFO:pipeline:Make a copy of a pd.Series with the values renamed.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.rename_values(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    dict_map: dict
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  series=age_combined_columns,
+INFO:pipeline:  dict_map={
+INFO:pipeline:    'AgeUnder40': 37.5,
+INFO:pipeline:    'Age40to44': 42.5,
+INFO:pipeline:    'Age45to49': 47.5,
+INFO:pipeline:    'Age50to54': 52.5,
+INFO:pipeline:    'Age55to59': 57.5,
+INFO:pipeline:    'Age60to64': 62.5,
+INFO:pipeline:    'Age65to69': 67.5,
+INFO:pipeline:    'Age70to74': 72.5,
+INFO:pipeline:    'Age75to79': 77.5,
+INFO:pipeline:    'Age80to84': 82.5,
+INFO:pipeline:    'Age85to89': 87.5,
+INFO:pipeline:    'AgeOver90': 92.5
+INFO:pipeline:    }
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  age_combined_columns
+INFO:pipeline:
+INFO:pipeline:* Update cleaned dataframe.
+INFO:pipeline:---------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  patient_id,
+INFO:pipeline:  treated,
+INFO:pipeline:  age
+INFO:pipeline:
+INFO:pipeline:* Sex: change M/F to 1/0.
+INFO:pipeline:-------------------------
+INFO:pipeline:Make a copy of a pd.Series with the values renamed.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.rename_values(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    dict_map: dict
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  series=S1Gender,
+INFO:pipeline:  dict_map={'M': 1, 'F': 0}
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  S1Gender
+INFO:pipeline:
+INFO:pipeline:* Update cleaned dataframe.
+INFO:pipeline:---------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  patient_id,
+INFO:pipeline:  treated,
+INFO:pipeline:  age,
+INFO:pipeline:  sex
+INFO:pipeline:
+INFO:pipeline:* Arrival times: change bands to start values.
+INFO:pipeline:----------------------------------------------
+INFO:pipeline:Make a copy of a pd.Series with the values renamed.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.rename_values(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    dict_map: dict
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  series=FirstArrivalTime,
+INFO:pipeline:  dict_map={
+INFO:pipeline:    '0000to3000': 0,
+INFO:pipeline:    '0300to0600': 3,
+INFO:pipeline:    '0600to0900': 6,
+INFO:pipeline:    '0900to1200': 9,
+INFO:pipeline:    '1200to1500': 12,
+INFO:pipeline:    '1500to1800': 15,
+INFO:pipeline:    '1800to2100': 18,
+INFO:pipeline:    '2100to2400': 21
+INFO:pipeline:    }
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  FirstArrivalTime
+INFO:pipeline:
+INFO:pipeline:* Update cleaned dataframe.
+INFO:pipeline:---------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  patient_id,
+INFO:pipeline:  treated,
+INFO:pipeline:  age,
+INFO:pipeline:  sex,
+INFO:pipeline:  FirstArrivalTime
+INFO:pipeline:
+INFO:pipeline:##################
+INFO:pipeline:##### Result #####
+INFO:pipeline:##################
+INFO:pipeline:
+INFO:pipeline:* Contents of cleaned dataframe.
+INFO:pipeline:--------------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  patient_id,
+INFO:pipeline:  treated,
+INFO:pipeline:  age,
+INFO:pipeline:  sex,
+INFO:pipeline:  FirstArrivalTime
+INFO:pipeline:
+INFO:pipeline:* Save cleaned dataframe to file.
+INFO:pipeline:---------------------------------
+INFO:pipeline:./output/data_cleaned.csv

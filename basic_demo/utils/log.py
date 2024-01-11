@@ -165,75 +165,32 @@ def log_function_params(fullargspec, kwargs):
     # Record what's happened in the new series attributes.
     # Starting DataFrame name:
     """
-
-    # # Check the value of each arg.
-    # arg_names = []
-    # for arg in args:
-    #     arg_name = find_arg_name(arg)
-    #     arg_names.append(arg_name)
-
     # Check the value of each kwarg.
     kwarg_names = {}
     for key, kwarg in zip(kwargs.keys(), kwargs.values()):
         kwarg_name = find_arg_name(kwarg)
         kwarg_names[key] = kwarg_name
 
-    # args_str = ', '.join([str(a) for a in args])
-    # kwargs_str = ', '.join(f'{k}={v}' for k, v
-    #                        in zip(kwarg_names.keys(), kwarg_names.values()))
-
-    import inspect
-    # argspec_sig = inspect.signature(func)
-
     indent = ' ' * 2  # Number of spaces per indent
 
     # Get one line per arg or kwarg,
     # "  name=value"
     lines = []
-
-    # for a, arg in enumerate(inspect.getfullargspec(func)[0]):
     for a, arg in enumerate(fullargspec[0]):
-        # if a < len(args):
-        #     val = arg_names[a]
-        # else:
         try:
             val = kwarg_names[arg]
         except KeyError:
             val='None'
         lines.append(f'{indent}{arg}={val}')
 
+    lines_w = newline_for_width(lines, w=100)
 
-    # Make sure lines don't go above a certain length.
-    # Maximum number of characters per line:
-    w = 79
-    lines_w = []
-    for line in lines:
-        if len(line) < w:
-            # No problem, use the line as it is.
-            lines_w.append(line)
-        else:
-            # Make a new line whenever there's an open bracket:
-            line = increase_indent_between_brackets(line)
-
-            # At every comma, create a new line.
-            lines_c = line.split(',')
-            for l, lc in enumerate(lines_c):
-                if l > 0:
-                    # If this isn't the first line
-                    # (which is the parameter name and already has whitespace)
-                    # Remove leading and trailing whitespace:
-                    lc = lc.strip()
-                # Add indent:
-                i = '' if l < 1 else indent * 2
-                # Save indented line to list:
-                lines_w.append(f'{i}{lc}')
-
-    argspec_str2 = ',\n'.join(lines_w)
+    params_str = ',\n'.join(lines_w)
 
     # If logging is set up, save to log:
     log_text('\n'.join([
         'With these parameters:',
-        argspec_str2
+        params_str
     ]))
 
 
@@ -251,9 +208,24 @@ def log_function_output(return_tuple):
         arg_name = find_arg_name(arg)
         lines.append(f'{indent}{arg_name}')
 
-    # Make sure lines don't go above a certain length.
+    lines_w = newline_for_width(lines, w=100)
+
+    outputs_str = ',\n'.join(lines_w)
+
+    # If logging is set up, save to log:
+    log_text('\n'.join([
+        'Giving the following as output:',
+        outputs_str
+    ]))
+
+
+def newline_for_width(lines, w=100, indent='  '):
+    """
+    
     # Maximum number of characters per line:
-    w = 79
+    w = 100
+    """
+    # Make sure lines don't go above a certain length.
     lines_w = []
     for line in lines:
         if len(line) < w:
@@ -275,14 +247,7 @@ def log_function_output(return_tuple):
                 i = '' if l < 1 else indent * 2
                 # Save indented line to list:
                 lines_w.append(f'{i}{lc}')
-
-    argspec_str2 = ',\n'.join(lines_w)
-
-    # If logging is set up, save to log:
-    log_text('\n'.join([
-        'Giving the following as output:',
-        argspec_str2
-    ]))
+    return lines_w
 
 
 def find_arg_name(arg):
@@ -392,12 +357,14 @@ def set_attrs_name(obj: any, obj_name: str):
         except AttributeError:
             # Can't set the attributes for this object.
             log_text(''.join([
-                'set_attrs_name failed.',
+                'set_attrs_name failed. ',
                 'The input object cannot have a name attribute.'
                 ]))
 
     # * Log the function outputs:
     # ---------------------------
-    to_return = (obj)
-    log_function_output(list(to_return))
+    to_return = (obj, )
+    log_function_output([t for t in to_return])
+    if len(to_return) == 1:
+        to_return = to_return[0]
     return to_return
