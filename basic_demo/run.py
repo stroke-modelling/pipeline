@@ -1,5 +1,7 @@
 """
-Run the example data.
+Clean the example data.
+
+Keep a log of the methods used and save it to file.
 """
 import pandas as pd
 import logging
