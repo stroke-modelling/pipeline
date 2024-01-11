@@ -5,7 +5,9 @@ Assumes that the data is stored as a Pandas DataFrame object.
 """
 import pandas as pd
 import inspect  # help find names for logging
-from utils.log import log_function_info, log_function_params, log_function_output
+
+from utils.log import log_function_info, log_function_params, \
+    log_function_output
 
 
 def load_data(path_to_file):
@@ -110,7 +112,7 @@ def rename_values(series: pd.Series, dict_map: dict):
 
     Example dictionary map to match gender M/F to 1/0:
       dict_map: dict = {'M': 1, 'F': 0}
-    """    
+    """
     # * Log the function info and inputs:
     # -----------------------------------
     args = locals()
@@ -126,6 +128,9 @@ def rename_values(series: pd.Series, dict_map: dict):
         inspect.getfullargspec(f),
         args
         )
+
+    # * The actual calculations:
+    # --------------------------
     # The "series" object is not changed. The "renamed" object
     # is a copy of the "series" object with the values renamed.
     renamed: pd.Series = series.map(dict_map)
