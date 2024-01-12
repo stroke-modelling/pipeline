@@ -48,14 +48,19 @@ INFO:pipeline:  cleaned data
 INFO:pipeline:
 INFO:pipeline:* Update cleaned dataframe.
 INFO:pipeline:---------------------------
-INFO:pipeline:Contents:
-INFO:pipeline:  PassengerId,
-INFO:pipeline:  Survived,
-INFO:pipeline:  Pclass,
-INFO:pipeline:  Age,
-INFO:pipeline:  SibSp,
-INFO:pipeline:  Parch,
-INFO:pipeline:  Fare
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 7 columns):
+INFO:pipeline: #   Column       Non-Null Count  Dtype  
+INFO:pipeline:---  ------       --------------  -----  
+INFO:pipeline: 0   PassengerId  891 non-null    int64  
+INFO:pipeline: 1   Survived     891 non-null    int64  
+INFO:pipeline: 2   Pclass       891 non-null    int64  
+INFO:pipeline: 3   Age          714 non-null    float64
+INFO:pipeline: 4   SibSp        891 non-null    int64  
+INFO:pipeline: 5   Parch        891 non-null    int64  
+INFO:pipeline: 6   Fare         891 non-null    float64
+INFO:pipeline:dtypes: float64(2), int64(5)
 INFO:pipeline:
 INFO:pipeline:################################
 INFO:pipeline:##### Process Titanic data #####
@@ -71,22 +76,27 @@ INFO:pipeline:    dict_map: dict
 INFO:pipeline:  )
 INFO:pipeline:With these parameters:
 INFO:pipeline:  series=Sex,
-INFO:pipeline:  dict_map={'male': 1, 'female': 0},
+INFO:pipeline:  dict_map={'male': True, 'female': False},
 INFO:pipeline:
 INFO:pipeline:Giving the following as output:
 INFO:pipeline:  Sex
 INFO:pipeline:
 INFO:pipeline:* Update cleaned dataframe.
 INFO:pipeline:---------------------------
-INFO:pipeline:Contents:
-INFO:pipeline:  PassengerId,
-INFO:pipeline:  Survived,
-INFO:pipeline:  Pclass,
-INFO:pipeline:  Age,
-INFO:pipeline:  SibSp,
-INFO:pipeline:  Parch,
-INFO:pipeline:  Fare,
-INFO:pipeline:  Male
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 8 columns):
+INFO:pipeline: #   Column       Non-Null Count  Dtype  
+INFO:pipeline:---  ------       --------------  -----  
+INFO:pipeline: 0   PassengerId  891 non-null    int64  
+INFO:pipeline: 1   Survived     891 non-null    int64  
+INFO:pipeline: 2   Pclass       891 non-null    int64  
+INFO:pipeline: 3   Age          714 non-null    float64
+INFO:pipeline: 4   SibSp        891 non-null    int64  
+INFO:pipeline: 5   Parch        891 non-null    int64  
+INFO:pipeline: 6   Fare         891 non-null    float64
+INFO:pipeline: 7   Male         891 non-null    bool   
+INFO:pipeline:dtypes: bool(1), float64(2), int64(5)
 INFO:pipeline:
 INFO:pipeline:* Age: impute missing values with median.
 INFO:pipeline:-----------------------------------------
@@ -104,16 +114,21 @@ INFO:pipeline:  missing_bool
 INFO:pipeline:
 INFO:pipeline:* Update cleaned dataframe.
 INFO:pipeline:---------------------------
-INFO:pipeline:Contents:
-INFO:pipeline:  PassengerId,
-INFO:pipeline:  Survived,
-INFO:pipeline:  Pclass,
-INFO:pipeline:  Age,
-INFO:pipeline:  SibSp,
-INFO:pipeline:  Parch,
-INFO:pipeline:  Fare,
-INFO:pipeline:  Male,
-INFO:pipeline:  AgeImputed
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 9 columns):
+INFO:pipeline: #   Column       Non-Null Count  Dtype  
+INFO:pipeline:---  ------       --------------  -----  
+INFO:pipeline: 0   PassengerId  891 non-null    int64  
+INFO:pipeline: 1   Survived     891 non-null    int64  
+INFO:pipeline: 2   Pclass       891 non-null    int64  
+INFO:pipeline: 3   Age          891 non-null    float64
+INFO:pipeline: 4   SibSp        891 non-null    int64  
+INFO:pipeline: 5   Parch        891 non-null    int64  
+INFO:pipeline: 6   Fare         891 non-null    float64
+INFO:pipeline: 7   Male         891 non-null    bool   
+INFO:pipeline: 8   AgeImputed   891 non-null    bool   
+INFO:pipeline:dtypes: bool(2), float64(2), int64(5)
 INFO:pipeline:
 INFO:pipeline:* Embarked: impute missing values with label.
 INFO:pipeline:---------------------------------------------
@@ -147,21 +162,26 @@ INFO:pipeline:  ohe
 INFO:pipeline:
 INFO:pipeline:* Update cleaned dataframe.
 INFO:pipeline:---------------------------
-INFO:pipeline:Contents:
-INFO:pipeline:  PassengerId,
-INFO:pipeline:  Survived,
-INFO:pipeline:  Pclass,
-INFO:pipeline:  Age,
-INFO:pipeline:  SibSp,
-INFO:pipeline:  Parch,
-INFO:pipeline:  Fare,
-INFO:pipeline:  Male,
-INFO:pipeline:  AgeImputed,
-INFO:pipeline:  Embarked_C,
-INFO:pipeline:  Embarked_Q,
-INFO:pipeline:  Embarked_S,
-INFO:pipeline:  Embarked_missing,
-INFO:pipeline:  EmbarkedImputed
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 14 columns):
+INFO:pipeline: #   Column            Non-Null Count  Dtype  
+INFO:pipeline:---  ------            --------------  -----  
+INFO:pipeline: 0   PassengerId       891 non-null    int64  
+INFO:pipeline: 1   Survived          891 non-null    int64  
+INFO:pipeline: 2   Pclass            891 non-null    int64  
+INFO:pipeline: 3   Age               891 non-null    float64
+INFO:pipeline: 4   SibSp             891 non-null    int64  
+INFO:pipeline: 5   Parch             891 non-null    int64  
+INFO:pipeline: 6   Fare              891 non-null    float64
+INFO:pipeline: 7   Male              891 non-null    bool   
+INFO:pipeline: 8   AgeImputed        891 non-null    bool   
+INFO:pipeline: 9   Embarked_C        891 non-null    bool   
+INFO:pipeline: 10  Embarked_Q        891 non-null    bool   
+INFO:pipeline: 11  Embarked_S        891 non-null    bool   
+INFO:pipeline: 12  Embarked_missing  891 non-null    bool   
+INFO:pipeline: 13  EmbarkedImputed   891 non-null    bool   
+INFO:pipeline:dtypes: bool(7), float64(2), int64(5)
 INFO:pipeline:
 INFO:pipeline:* Cabin: split multiple entries.
 INFO:pipeline:--------------------------------
@@ -226,6 +246,7 @@ INFO:pipeline:
 INFO:pipeline:Giving the following as output:
 INFO:pipeline:  imputed_with_missing_label,
 INFO:pipeline:  missing_bool
+INFO:pipeline:Convert dtype to int:
 INFO:pipeline:
 INFO:pipeline:* Cabin letter: one-hot-encode.
 INFO:pipeline:-------------------------------
@@ -243,33 +264,38 @@ INFO:pipeline:  ohe
 INFO:pipeline:
 INFO:pipeline:* Update cleaned dataframe.
 INFO:pipeline:---------------------------
-INFO:pipeline:Contents:
-INFO:pipeline:  PassengerId,
-INFO:pipeline:  Survived,
-INFO:pipeline:  Pclass,
-INFO:pipeline:  Age,
-INFO:pipeline:  SibSp,
-INFO:pipeline:  Parch,
-INFO:pipeline:  Fare,
-INFO:pipeline:  Male,
-INFO:pipeline:  AgeImputed,
-INFO:pipeline:  Embarked_C,
-INFO:pipeline:  Embarked_Q,
-INFO:pipeline:  Embarked_S,
-INFO:pipeline:  Embarked_missing,
-INFO:pipeline:  EmbarkedImputed,
-INFO:pipeline:  CabinLetter_A,
-INFO:pipeline:  CabinLetter_B,
-INFO:pipeline:  CabinLetter_C,
-INFO:pipeline:  CabinLetter_D,
-INFO:pipeline:  CabinLetter_E,
-INFO:pipeline:  CabinLetter_F,
-INFO:pipeline:  CabinLetter_G,
-INFO:pipeline:  CabinLetter_T,
-INFO:pipeline:  CabinLetter_missing,
-INFO:pipeline:  CabinLetterImputed,
-INFO:pipeline:  CabinNumber,
-INFO:pipeline:  CabinNumberImputed
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 26 columns):
+INFO:pipeline: #   Column               Non-Null Count  Dtype  
+INFO:pipeline:---  ------               --------------  -----  
+INFO:pipeline: 0   PassengerId          891 non-null    int64  
+INFO:pipeline: 1   Survived             891 non-null    int64  
+INFO:pipeline: 2   Pclass               891 non-null    int64  
+INFO:pipeline: 3   Age                  891 non-null    float64
+INFO:pipeline: 4   SibSp                891 non-null    int64  
+INFO:pipeline: 5   Parch                891 non-null    int64  
+INFO:pipeline: 6   Fare                 891 non-null    float64
+INFO:pipeline: 7   Male                 891 non-null    bool   
+INFO:pipeline: 8   AgeImputed           891 non-null    bool   
+INFO:pipeline: 9   Embarked_C           891 non-null    bool   
+INFO:pipeline: 10  Embarked_Q           891 non-null    bool   
+INFO:pipeline: 11  Embarked_S           891 non-null    bool   
+INFO:pipeline: 12  Embarked_missing     891 non-null    bool   
+INFO:pipeline: 13  EmbarkedImputed      891 non-null    bool   
+INFO:pipeline: 14  CabinLetter_A        891 non-null    bool   
+INFO:pipeline: 15  CabinLetter_B        891 non-null    bool   
+INFO:pipeline: 16  CabinLetter_C        891 non-null    bool   
+INFO:pipeline: 17  CabinLetter_D        891 non-null    bool   
+INFO:pipeline: 18  CabinLetter_E        891 non-null    bool   
+INFO:pipeline: 19  CabinLetter_F        891 non-null    bool   
+INFO:pipeline: 20  CabinLetter_G        891 non-null    bool   
+INFO:pipeline: 21  CabinLetter_T        891 non-null    bool   
+INFO:pipeline: 22  CabinLetter_missing  891 non-null    bool   
+INFO:pipeline: 23  CabinLetterImputed   891 non-null    bool   
+INFO:pipeline: 24  CabinNumber          891 non-null    int64  
+INFO:pipeline: 25  CabinNumberImputed   891 non-null    bool   
+INFO:pipeline:dtypes: bool(18), float64(2), int64(6)
 INFO:pipeline:
 INFO:pipeline:##################
 INFO:pipeline:##### Result #####
@@ -277,33 +303,47 @@ INFO:pipeline:##################
 INFO:pipeline:
 INFO:pipeline:* Contents of cleaned dataframe.
 INFO:pipeline:--------------------------------
-INFO:pipeline:Contents:
-INFO:pipeline:  PassengerId,
-INFO:pipeline:  Survived,
-INFO:pipeline:  Pclass,
-INFO:pipeline:  Age,
-INFO:pipeline:  SibSp,
-INFO:pipeline:  Parch,
-INFO:pipeline:  Fare,
-INFO:pipeline:  Male,
-INFO:pipeline:  AgeImputed,
-INFO:pipeline:  Embarked_C,
-INFO:pipeline:  Embarked_Q,
-INFO:pipeline:  Embarked_S,
-INFO:pipeline:  Embarked_missing,
-INFO:pipeline:  EmbarkedImputed,
-INFO:pipeline:  CabinLetter_A,
-INFO:pipeline:  CabinLetter_B,
-INFO:pipeline:  CabinLetter_C,
-INFO:pipeline:  CabinLetter_D,
-INFO:pipeline:  CabinLetter_E,
-INFO:pipeline:  CabinLetter_F,
-INFO:pipeline:  CabinLetter_G,
-INFO:pipeline:  CabinLetter_T,
-INFO:pipeline:  CabinLetter_missing,
-INFO:pipeline:  CabinLetterImputed,
-INFO:pipeline:  CabinNumber,
-INFO:pipeline:  CabinNumberImputed
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 26 columns):
+INFO:pipeline: #   Column               Non-Null Count  Dtype  
+INFO:pipeline:---  ------               --------------  -----  
+INFO:pipeline: 0   PassengerId          891 non-null    int64  
+INFO:pipeline: 1   Survived             891 non-null    int64  
+INFO:pipeline: 2   Pclass               891 non-null    int64  
+INFO:pipeline: 3   Age                  891 non-null    float64
+INFO:pipeline: 4   SibSp                891 non-null    int64  
+INFO:pipeline: 5   Parch                891 non-null    int64  
+INFO:pipeline: 6   Fare                 891 non-null    float64
+INFO:pipeline: 7   Male                 891 non-null    bool   
+INFO:pipeline: 8   AgeImputed           891 non-null    bool   
+INFO:pipeline: 9   Embarked_C           891 non-null    bool   
+INFO:pipeline: 10  Embarked_Q           891 non-null    bool   
+INFO:pipeline: 11  Embarked_S           891 non-null    bool   
+INFO:pipeline: 12  Embarked_missing     891 non-null    bool   
+INFO:pipeline: 13  EmbarkedImputed      891 non-null    bool   
+INFO:pipeline: 14  CabinLetter_A        891 non-null    bool   
+INFO:pipeline: 15  CabinLetter_B        891 non-null    bool   
+INFO:pipeline: 16  CabinLetter_C        891 non-null    bool   
+INFO:pipeline: 17  CabinLetter_D        891 non-null    bool   
+INFO:pipeline: 18  CabinLetter_E        891 non-null    bool   
+INFO:pipeline: 19  CabinLetter_F        891 non-null    bool   
+INFO:pipeline: 20  CabinLetter_G        891 non-null    bool   
+INFO:pipeline: 21  CabinLetter_T        891 non-null    bool   
+INFO:pipeline: 22  CabinLetter_missing  891 non-null    bool   
+INFO:pipeline: 23  CabinLetterImputed   891 non-null    bool   
+INFO:pipeline: 24  CabinNumber          891 non-null    int64  
+INFO:pipeline: 25  CabinNumberImputed   891 non-null    bool   
+INFO:pipeline:dtypes: bool(18), float64(2), int64(6)
+INFO:pipeline:             count        mean         std   min       25%       50%    75%       max
+INFO:pipeline:PassengerId  891.0  446.000000  257.353842  1.00  223.5000  446.0000  668.5  891.0000
+INFO:pipeline:Survived     891.0    0.383838    0.486592  0.00    0.0000    0.0000    1.0    1.0000
+INFO:pipeline:Pclass       891.0    2.308642    0.836071  1.00    2.0000    3.0000    3.0    3.0000
+INFO:pipeline:Age          891.0   29.361582   13.019697  0.42   22.0000   28.0000   35.0   80.0000
+INFO:pipeline:SibSp        891.0    0.523008    1.102743  0.00    0.0000    0.0000    1.0    8.0000
+INFO:pipeline:Parch        891.0    0.381594    0.806057  0.00    0.0000    0.0000    0.0    6.0000
+INFO:pipeline:Fare         891.0   32.204208   49.693429  0.00    7.9104   14.4542   31.0  512.3292
+INFO:pipeline:CabinNumber  891.0   11.021324   26.638204  0.00    0.0000    0.0000    0.0  148.0000
 INFO:pipeline:
 INFO:pipeline:* Save cleaned dataframe to file.
 INFO:pipeline:---------------------------------

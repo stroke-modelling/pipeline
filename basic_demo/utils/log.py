@@ -11,6 +11,7 @@ which is harder to read and to reuse elsewhere without the log.
 import pandas as pd
 import logging
 import inspect  # help find names for logging
+import io  # To write df.info() output to log.
 
 
 # #####################################
@@ -94,15 +95,33 @@ def log_text(str: str, indent: str = '', w=100):
 # ###########################################
 # ##### Functions to gather info to log #####
 # ###########################################
-def log_dataframe_columns(df):
+def log_dataframe_contents(df):
     """
-    Write the columns of this DataFrame.
+    Write the info of this DataFrame - columns, missing, dtype.
+
+    Wrapper for df.info().
     """
-    str = ''.join([
-        'Contents:\n  ',
-        ',\n  '.join(df.columns)
-        ])
-    log_text(str)
+    # Send the output of df.info() to this buffer:
+    buf = io.StringIO()
+    # Get the useful information:
+    df.info(
+        buf=buf, verbose=True, show_counts=True, memory_usage=False)
+    # Convert the contents of the buffer to string so that
+    # we can write it to log:
+    log_text(buf.getvalue())
+
+
+def log_dataframe_stats(df):
+    """
+    Write stats for this DataFrame - mean, std, min...
+
+    Wrapper for df.describe().
+    """
+    # Get the useful information:
+    stats = df.describe()
+    # Convert the contents of the buffer to string so that
+    # we can write it to log:
+    log_text(stats.T.to_string())
 
 
 def log_function_info(func_module, func_name, func_doc, argspec_sig):
@@ -269,15 +288,15 @@ def _newline_for_width(line: str, w: int = 100, indent: str = '  '):
 
         # At every comma, create a new line.
         lines_c = line.split(',')
-        for l, lc in enumerate(lines_c):
-            if l > 0:
+        for i, lc in enumerate(lines_c):
+            if i > 0:
                 # If this isn't the first line
                 # (which is the parameter name and already has whitespace)
                 # Remove leading and trailing whitespace:
                 lc = lc.strip()
                 # lc = f',\n{i}{lc}'
             # Add indent:
-            i = '' if l < 1 else indent * 2
+            i = '' if i < 1 else indent * 2
             # Save indented line to list:
             line_w += f',\n{i}{lc}'
     return line_w
@@ -301,7 +320,7 @@ def find_arg_name(arg: any):
         # This is a pandas Series.
         # Take the name of the Series:
         arg_name = arg.name
-        if arg_name == None:
+        if arg_name is None:
             # No name, so use the value instead.
             arg_name = '{unnamed pd.Series}'
     elif isinstance(arg, pd.DataFrame):
