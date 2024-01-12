@@ -1,0 +1,310 @@
+INFO:pipeline:
+INFO:pipeline:#################################
+INFO:pipeline:##### Titanic data cleaning #####
+INFO:pipeline:#################################
+INFO:pipeline:
+INFO:pipeline:* Import raw data.
+INFO:pipeline:------------------
+INFO:pipeline:Store a name for this object in its attrs dict or as Series name.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.log.set_attrs_name(
+INFO:pipeline:    obj: <built-in function any>,
+INFO:pipeline:    obj_name: str
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  obj={unnamed pd.DataFrame},
+INFO:pipeline:  obj_name=raw data,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  raw data
+INFO:pipeline:
+INFO:pipeline:* Check for missing data.
+INFO:pipeline:-------------------------
+INFO:pipeline:Find number of missing entries in each column of DataFrame.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.check_for_missing_data(
+INFO:pipeline:    df: pandas.core.frame.DataFrame
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  df=raw data,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  missing_data
+INFO:pipeline:
+INFO:pipeline:* Set up cleaned output DataFrame.
+INFO:pipeline:----------------------------------
+INFO:pipeline:Store a name for this object in its attrs dict or as Series name.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.log.set_attrs_name(
+INFO:pipeline:    obj: <built-in function any>,
+INFO:pipeline:    obj_name: str
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  obj={unnamed pd.DataFrame},
+INFO:pipeline:  obj_name=cleaned data,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  cleaned data
+INFO:pipeline:
+INFO:pipeline:* Update cleaned dataframe.
+INFO:pipeline:---------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  PassengerId,
+INFO:pipeline:  Survived,
+INFO:pipeline:  Pclass,
+INFO:pipeline:  Age,
+INFO:pipeline:  SibSp,
+INFO:pipeline:  Parch,
+INFO:pipeline:  Fare
+INFO:pipeline:
+INFO:pipeline:################################
+INFO:pipeline:##### Process Titanic data #####
+INFO:pipeline:################################
+INFO:pipeline:
+INFO:pipeline:* Sex: change male/female to 1/0.
+INFO:pipeline:---------------------------------
+INFO:pipeline:Make a copy of a pd.Series with the values renamed.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.rename_values(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    dict_map: dict
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  series=Sex,
+INFO:pipeline:  dict_map={'male': 1, 'female': 0},
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  Sex
+INFO:pipeline:
+INFO:pipeline:* Update cleaned dataframe.
+INFO:pipeline:---------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  PassengerId,
+INFO:pipeline:  Survived,
+INFO:pipeline:  Pclass,
+INFO:pipeline:  Age,
+INFO:pipeline:  SibSp,
+INFO:pipeline:  Parch,
+INFO:pipeline:  Fare,
+INFO:pipeline:  Male
+INFO:pipeline:
+INFO:pipeline:* Age: impute missing values with median.
+INFO:pipeline:-----------------------------------------
+INFO:pipeline:Replace missing values in a Pandas series with median.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.impute_missing_with_median(
+INFO:pipeline:    _series: pandas.core.series.Series
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  _series=Age,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  imputed_with_median,
+INFO:pipeline:  missing_bool
+INFO:pipeline:
+INFO:pipeline:* Update cleaned dataframe.
+INFO:pipeline:---------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  PassengerId,
+INFO:pipeline:  Survived,
+INFO:pipeline:  Pclass,
+INFO:pipeline:  Age,
+INFO:pipeline:  SibSp,
+INFO:pipeline:  Parch,
+INFO:pipeline:  Fare,
+INFO:pipeline:  Male,
+INFO:pipeline:  AgeImputed
+INFO:pipeline:
+INFO:pipeline:* Embarked: impute missing values with label.
+INFO:pipeline:---------------------------------------------
+INFO:pipeline:Replace missing values in a Pandas series with the text 'missing'
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.impute_missing_with_missing_label(
+INFO:pipeline:    _series: pandas.core.series.Series,
+INFO:pipeline:    label: str = 'missing'
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  _series=Embarked,
+INFO:pipeline:  label=missing,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  imputed_with_missing_label,
+INFO:pipeline:  missing_bool
+INFO:pipeline:
+INFO:pipeline:* Embarked: one-hot-encode.
+INFO:pipeline:---------------------------
+INFO:pipeline:Convert a single column to several one-hot encoded columns.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.apply_one_hot_encoding(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    **kwargs
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  series=imputed_with_missing_label,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  ohe
+INFO:pipeline:
+INFO:pipeline:* Update cleaned dataframe.
+INFO:pipeline:---------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  PassengerId,
+INFO:pipeline:  Survived,
+INFO:pipeline:  Pclass,
+INFO:pipeline:  Age,
+INFO:pipeline:  SibSp,
+INFO:pipeline:  Parch,
+INFO:pipeline:  Fare,
+INFO:pipeline:  Male,
+INFO:pipeline:  AgeImputed,
+INFO:pipeline:  Embarked_C,
+INFO:pipeline:  Embarked_Q,
+INFO:pipeline:  Embarked_S,
+INFO:pipeline:  Embarked_missing,
+INFO:pipeline:  EmbarkedImputed
+INFO:pipeline:
+INFO:pipeline:* Cabin: split multiple entries.
+INFO:pipeline:--------------------------------
+INFO:pipeline:Split column strings by a delimiter, store in multiple columns.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.split_strings_to_columns_by_delimiter(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    delimiter: str = ',
+INFO:pipeline:    '
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  series=Cabin,
+INFO:pipeline:  delimiter= ,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  raw data
+INFO:pipeline:Only keep the first cabin entry.
+INFO:pipeline:
+INFO:pipeline:* Cabin: split letters and numbers.
+INFO:pipeline:-----------------------------------
+INFO:pipeline:Split column strings at given indices, store in multiple columns.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.split_strings_to_columns_by_index(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    split_index: 'int | list'
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  series=Cabin_0,
+INFO:pipeline:  split_index=1,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  {unnamed pd.DataFrame}
+INFO:pipeline:
+INFO:pipeline:* Cabin letter: impute missing values.
+INFO:pipeline:--------------------------------------
+INFO:pipeline:Replace missing values in a Pandas series with the text 'missing'
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.impute_missing_with_missing_label(
+INFO:pipeline:    _series: pandas.core.series.Series,
+INFO:pipeline:    label: str = 'missing'
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  _series=CabinLetter,
+INFO:pipeline:  label=missing,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  imputed_with_missing_label,
+INFO:pipeline:  missing_bool
+INFO:pipeline:
+INFO:pipeline:* Cabin number: impute missing values.
+INFO:pipeline:--------------------------------------
+INFO:pipeline:Replace missing values in a Pandas series with the text 'missing'
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.impute_missing_with_missing_label(
+INFO:pipeline:    _series: pandas.core.series.Series,
+INFO:pipeline:    label: str = 'missing'
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  _series=CabinNumber,
+INFO:pipeline:  label=0,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  imputed_with_missing_label,
+INFO:pipeline:  missing_bool
+INFO:pipeline:
+INFO:pipeline:* Cabin letter: one-hot-encode.
+INFO:pipeline:-------------------------------
+INFO:pipeline:Convert a single column to several one-hot encoded columns.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.apply_one_hot_encoding(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    **kwargs
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  series=imputed_with_missing_label,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  ohe
+INFO:pipeline:
+INFO:pipeline:* Update cleaned dataframe.
+INFO:pipeline:---------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  PassengerId,
+INFO:pipeline:  Survived,
+INFO:pipeline:  Pclass,
+INFO:pipeline:  Age,
+INFO:pipeline:  SibSp,
+INFO:pipeline:  Parch,
+INFO:pipeline:  Fare,
+INFO:pipeline:  Male,
+INFO:pipeline:  AgeImputed,
+INFO:pipeline:  Embarked_C,
+INFO:pipeline:  Embarked_Q,
+INFO:pipeline:  Embarked_S,
+INFO:pipeline:  Embarked_missing,
+INFO:pipeline:  EmbarkedImputed,
+INFO:pipeline:  CabinLetter_A,
+INFO:pipeline:  CabinLetter_B,
+INFO:pipeline:  CabinLetter_C,
+INFO:pipeline:  CabinLetter_D,
+INFO:pipeline:  CabinLetter_E,
+INFO:pipeline:  CabinLetter_F,
+INFO:pipeline:  CabinLetter_G,
+INFO:pipeline:  CabinLetter_T,
+INFO:pipeline:  CabinLetter_missing,
+INFO:pipeline:  CabinLetterImputed,
+INFO:pipeline:  CabinNumber,
+INFO:pipeline:  CabinNumberImputed
+INFO:pipeline:
+INFO:pipeline:##################
+INFO:pipeline:##### Result #####
+INFO:pipeline:##################
+INFO:pipeline:
+INFO:pipeline:* Contents of cleaned dataframe.
+INFO:pipeline:--------------------------------
+INFO:pipeline:Contents:
+INFO:pipeline:  PassengerId,
+INFO:pipeline:  Survived,
+INFO:pipeline:  Pclass,
+INFO:pipeline:  Age,
+INFO:pipeline:  SibSp,
+INFO:pipeline:  Parch,
+INFO:pipeline:  Fare,
+INFO:pipeline:  Male,
+INFO:pipeline:  AgeImputed,
+INFO:pipeline:  Embarked_C,
+INFO:pipeline:  Embarked_Q,
+INFO:pipeline:  Embarked_S,
+INFO:pipeline:  Embarked_missing,
+INFO:pipeline:  EmbarkedImputed,
+INFO:pipeline:  CabinLetter_A,
+INFO:pipeline:  CabinLetter_B,
+INFO:pipeline:  CabinLetter_C,
+INFO:pipeline:  CabinLetter_D,
+INFO:pipeline:  CabinLetter_E,
+INFO:pipeline:  CabinLetter_F,
+INFO:pipeline:  CabinLetter_G,
+INFO:pipeline:  CabinLetter_T,
+INFO:pipeline:  CabinLetter_missing,
+INFO:pipeline:  CabinLetterImputed,
+INFO:pipeline:  CabinNumber,
+INFO:pipeline:  CabinNumberImputed
+INFO:pipeline:
+INFO:pipeline:* Save cleaned dataframe to file.
+INFO:pipeline:---------------------------------
+INFO:pipeline:./output/titanic_cleaned.csv

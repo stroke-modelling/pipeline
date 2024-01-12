@@ -300,9 +300,8 @@ def find_arg_name(arg: any):
     if isinstance(arg, pd.Series):
         # This is a pandas Series.
         # Take the name of the Series:
-        try:
-            arg_name = arg.name
-        except (KeyError, AttributeError):
+        arg_name = arg.name
+        if arg_name == None:
             # No name, so use the value instead.
             arg_name = '{unnamed pd.Series}'
     elif isinstance(arg, pd.DataFrame):

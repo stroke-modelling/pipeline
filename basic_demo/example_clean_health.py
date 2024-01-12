@@ -34,7 +34,7 @@ if __name__ == '__main__':
         # we can check whether it exists.
         logging.getLogger('pipeline')
         logging.basicConfig(
-            filename='example2.log',
+            filename='example_clean_health.log',
             encoding='utf-8',
             level=logging.DEBUG,
             filemode='w'  # Overwrite the existing file
