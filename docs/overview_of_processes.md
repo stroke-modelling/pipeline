@@ -102,6 +102,7 @@ __Logs__
 | __ADAM (sp?), gradient descent, built-ins...__ | (❓?) | (❓?) |  |     |
 | __Holdout__ | (❓? precisely) | Prevents over-fitting. |  |     |
 | __Regularisation__ | (❓? precisely) | Prevents over-fitting. |  |     |
+| __Learning rate__ | Train the model multiple times with increasing amounts of training data. | Find how much data is needed before accuracy stops increasing. |  | [🛳️][titanic-learningrate] [🧠][samuel1-learningrate] |
 
 
 ### Prepare the data for modelling
@@ -152,6 +153,7 @@ __Logs__
 [titanic-synthetic]: https://michaelallen1966.github.io/titanic/30_synthetic_data.html
 [titanic-oversampling]: https://michaelallen1966.github.io/titanic/14_imbalanced%20_data_sampling.html
 [titanic-standardise]: https://michaelallen1966.github.io/titanic/02_logistic_regression.html#standardise-data
+[titanic-learningrate]: https://michaelallen1966.github.io/titanic/07_learning_curve.html
 [titanic-traintest]: https://michaelallen1966.github.io/titanic/02_logistic_regression.html#divide-into-x-features-and-y-labels
 [titanic-kfold]: https://michaelallen1966.github.io/titanic/03_k_fold.html
 [titanic-featureselection]: https://michaelallen1966.github.io/titanic/10_feature_selection_2_forward.html
@@ -163,6 +165,7 @@ __Logs__
 
 [samuel1-descriptivestats]: https://samuel-book.github.io/samuel-1/descriptive_stats/01_descriptive.html
 [samuel1-covariance]: https://samuel-book.github.io/samuel-1/descriptive_stats/07_covariance.html
+[samuel1-learningrate]: https://samuel-book.github.io/samuel-1/random_forest/random_forest_single_fit.html#learning-cvurve
 [samuel1-kfold]: https://samuel-book.github.io/samuel-1/introduction/kfold.html
 [samuel1-featureimportance]: https://samuel-book.github.io/samuel-1/random_forest/random_forest_single_fit.html#feature-importances
 [samuel1-accuracy]: https://samuel-book.github.io/samuel-1/random_forest/random_forest_single_fit.html#results
