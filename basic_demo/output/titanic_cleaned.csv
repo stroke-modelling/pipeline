@@ -1,4 +1,4 @@
-PassengerId,Survived,Pclass,Age,SibSp,Parch,Fare,Male,AgeImputed,Embarked_C,Embarked_Q,Embarked_S,Embarked_missing,EmbarkedImputed,CabinLetter_A,CabinLetter_B,CabinLetter_C,CabinLetter_D,CabinLetter_E,CabinLetter_F,CabinLetter_G,CabinLetter_T,CabinLetter_missing,CabinLetterImputed,CabinNumber,CabinNumberImputed
+PassengerId,Survived,Pclass,Age,SibSp,Parch,Fare,Male,AgeImputed,C,Q,S,missing,EmbarkedImputed,A,B,C,D,E,F,G,T,missing,CabinLetterImputed,CabinNumber,CabinNumberImputed
 1,0,3,22.0,1,0,7.25,True,False,False,False,True,False,False,False,False,False,False,False,False,False,False,True,True,0,True
 2,1,1,38.0,1,0,71.2833,False,False,True,False,False,False,False,False,False,True,False,False,False,False,False,False,False,85,False
 3,1,3,26.0,0,0,7.925,False,False,False,False,True,False,False,False,False,False,False,False,False,False,False,True,True,0,True
