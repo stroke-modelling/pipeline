@@ -4,10 +4,6 @@ Routines for cleaning input dataframe.
 Assumes that the data is stored as a Pandas DataFrame object.
 """
 import pandas as pd
-import inspect  # help find names for logging
-
-from utils.log import log_function_info, log_function_params, \
-    log_function_output
 
 
 def load_data(path_to_file):
@@ -28,24 +24,6 @@ def check_for_missing_data(df: pd.DataFrame):
     series_missing - pd.Series. Has an entry for each column of df
                         and its number of missing data points.
     """
-    # * Log the function info and inputs:
-    # -----------------------------------
-    args = locals()
-    f = check_for_missing_data
-
-    log_function_info(
-        f.__module__,
-        f.__name__,
-        f.__doc__,
-        inspect.signature(f)
-        )
-    log_function_params(
-        inspect.getfullargspec(f),
-        args
-        )
-
-    # * The actual calculations:
-    # --------------------------
     # Make Series with index containing column names from df
     # and first column containing number of missing entries
     # in each column of df.
@@ -53,14 +31,7 @@ def check_for_missing_data(df: pd.DataFrame):
 
     # # Set the series name:
     series_missing.name = 'missing_data'
-
-    # * Log the function outputs:
-    # ---------------------------
-    to_return = (series_missing, )
-    log_function_output([t for t in to_return])
-    if len(to_return) == 1:
-        to_return = to_return[0]
-    return to_return
+    return series_missing
 
 
 def apply_one_hot_encoding(series: pd.Series, **kwargs):
@@ -97,37 +68,15 @@ def apply_one_hot_encoding(series: pd.Series, **kwargs):
     -------
     series_ohe - pd.Series. Several columns, now one-hot-encoded.
     """
-    # * Log the function info and inputs:
-    # -----------------------------------
-    args = locals()
-    f = apply_one_hot_encoding
-
-    log_function_info(
-        f.__module__,
-        f.__name__,
-        f.__doc__,
-        inspect.signature(f)
-        )
-    log_function_params(
-        inspect.getfullargspec(f),
-        args
-        )
-
-    # * The actual calculations:
-    # --------------------------
     # One-hot-encode the series:
-    df_ohe = pd.get_dummies(series, **kwargs)
+    # TO DO - fix this kwargs argument.
+    # TypeError: get_dummies() got an unexpected keyword argument 'kwargs'
+    df_ohe = pd.get_dummies(series)#, **kwargs)
 
     # Set the DataFrame name:
     df_ohe.attrs['name'] = 'ohe'
 
-    # * Log the function outputs:
-    # ---------------------------
-    to_return = (df_ohe, )
-    log_function_output([t for t in to_return])
-    if len(to_return) == 1:
-        to_return = to_return[0]
-    return to_return
+    return df_ohe
 
 
 def remove_one_hot_encoding(df: pd.DataFrame, columns: list):
@@ -166,24 +115,6 @@ def remove_one_hot_encoding(df: pd.DataFrame, columns: list):
              that had the highest value for that row. For one-hot-
              encoded data, expect all but one values in a row to be 0.
     """
-    # * Log the function info and inputs:
-    # -----------------------------------
-    args = locals()
-    f = remove_one_hot_encoding
-
-    log_function_info(
-        f.__module__,
-        f.__name__,
-        f.__doc__,
-        inspect.signature(f)
-        )
-    log_function_params(
-        inspect.getfullargspec(f),
-        args
-        )
-
-    # * The actual calculations:
-    # --------------------------
     # Extract columns
     col_extract: pd.DataFrame = df[columns]
     # Find which column contains the highest value for each patient.
@@ -195,13 +126,7 @@ def remove_one_hot_encoding(df: pd.DataFrame, columns: list):
     # Set the series name:
     series.name = 'removed_one_hot'
 
-    # * Log the function outputs:
-    # ---------------------------
-    to_return = (series, )
-    log_function_output([t for t in to_return])
-    if len(to_return) == 1:
-        to_return = to_return[0]
-    return to_return
+    return series
 
 
 def rename_values(series: pd.Series, dict_map: dict):
@@ -228,35 +153,11 @@ def rename_values(series: pd.Series, dict_map: dict):
     Example dictionary map to match gender M/F to 1/0:
       dict_map: dict = {'M': 1, 'F': 0}
     """
-    # * Log the function info and inputs:
-    # -----------------------------------
-    args = locals()
-    f = rename_values
-
-    log_function_info(
-        f.__module__,
-        f.__name__,
-        f.__doc__,
-        inspect.signature(f)
-        )
-    log_function_params(
-        inspect.getfullargspec(f),
-        args
-        )
-
-    # * The actual calculations:
-    # --------------------------
     # The "series" object is not changed. The "renamed" object
     # is a copy of the "series" object with the values renamed.
     renamed: pd.Series = series.map(dict_map)
 
-    # * Log the function outputs:
-    # ---------------------------
-    to_return = (renamed, )
-    log_function_output([t for t in to_return])
-    if len(to_return) == 1:
-        to_return = to_return[0]
-    return to_return
+    return renamed
 
 
 def split_strings_to_columns_by_delimiter(
@@ -290,24 +191,6 @@ def split_strings_to_columns_by_delimiter(
     df_split - pd.DataFrame. DataFrame of many columns containing the
                split strings.
     """
-    # * Log the function info and inputs:
-    # -----------------------------------
-    args = locals()
-    f = split_strings_to_columns_by_delimiter
-
-    log_function_info(
-        f.__module__,
-        f.__name__,
-        f.__doc__,
-        inspect.signature(f)
-        )
-    log_function_params(
-        inspect.getfullargspec(f),
-        args
-        )
-
-    # * The actual calculations:
-    # --------------------------
     # Split each cell into multiple columns, one new column for
     # each delimiter hit in the original string.
     df_split = series.str.split(delimiter, expand=True)
@@ -316,13 +199,7 @@ def split_strings_to_columns_by_delimiter(
     # Results in names "{series.name}_0", "{series.name}_1" etc.
     df_split.columns = [f'{series.name}_{i}' for i in df_split.columns]
 
-    # * Log the function outputs:
-    # ---------------------------
-    to_return = (df_split, )
-    log_function_output([t for t in to_return])
-    if len(to_return) == 1:
-        to_return = to_return[0]
-    return to_return
+    return df_split
 
 
 def split_strings_to_columns_by_index(
@@ -355,24 +232,6 @@ def split_strings_to_columns_by_index(
     df_split - pd.DataFrame. DataFrame of many columns containing the
                split strings.
     """
-    # * Log the function info and inputs:
-    # -----------------------------------
-    args = locals()
-    f = split_strings_to_columns_by_index
-
-    log_function_info(
-        f.__module__,
-        f.__name__,
-        f.__doc__,
-        inspect.signature(f)
-        )
-    log_function_params(
-        inspect.getfullargspec(f),
-        args
-        )
-
-    # * The actual calculations:
-    # --------------------------
     # Find the name of the starting series:
     n = series.name
 
@@ -402,13 +261,7 @@ def split_strings_to_columns_by_index(
         # Place this column in the results DataFrame:
         df_split[f'{n}_{i}'] = series_split
 
-    # * Log the function outputs:
-    # ---------------------------
-    to_return = (df_split, )
-    log_function_output([t for t in to_return])
-    if len(to_return) == 1:
-        to_return = to_return[0]
-    return to_return
+    return df_split
 
 
 def impute_missing_with_median(_series: pd.Series):
@@ -421,24 +274,6 @@ def impute_missing_with_median(_series: pd.Series):
     https://michaelallen1966.github.io/titanic/01_preprocessing.html
     (Accessed 12th January 2024).
     """
-    # * Log the function info and inputs:
-    # -----------------------------------
-    args = locals()
-    f = impute_missing_with_median
-
-    log_function_info(
-        f.__module__,
-        f.__name__,
-        f.__doc__,
-        inspect.signature(f)
-        )
-    log_function_params(
-        inspect.getfullargspec(f),
-        args
-        )
-
-    # * The actual calculations:
-    # --------------------------
     # Copy the series to avoid change to the original series.
     series = _series.copy()
     median = series.median()
@@ -449,13 +284,7 @@ def impute_missing_with_median(_series: pd.Series):
     series.name = 'imputed_with_median'
     missing.name = 'missing_bool'
 
-    # * Log the function outputs:
-    # ---------------------------
-    to_return = (series, missing)
-    log_function_output([t for t in to_return])
-    if len(to_return) == 1:
-        to_return = to_return[0]
-    return to_return
+    return series, missing
 
 
 def impute_missing_with_missing_label(
@@ -469,24 +298,6 @@ def impute_missing_with_missing_label(
     https://michaelallen1966.github.io/titanic/01_preprocessing.html
     (Accessed 12th January 2024).
     """
-    # * Log the function info and inputs:
-    # -----------------------------------
-    args = locals()
-    f = impute_missing_with_missing_label
-
-    log_function_info(
-        f.__module__,
-        f.__name__,
-        f.__doc__,
-        inspect.signature(f)
-        )
-    log_function_params(
-        inspect.getfullargspec(f),
-        args
-        )
-
-    # * The actual calculations:
-    # --------------------------
     # Copy the series to avoid change to the original series.
     series = _series.copy()
     missing = series.isna()
@@ -496,10 +307,4 @@ def impute_missing_with_missing_label(
     series.name = 'imputed_with_missing_label'
     missing.name = 'missing_bool'
 
-    # * Log the function outputs:
-    # ---------------------------
-    to_return = (series, missing)
-    log_function_output([t for t in to_return])
-    if len(to_return) == 1:
-        to_return = to_return[0]
-    return to_return
+    return series, missing

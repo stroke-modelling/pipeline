@@ -8,7 +8,6 @@ import logging
 
 from utils.log import log_heading, log_step, log_text, \
     log_dataframe_contents, set_attrs_name, log_dataframe_stats
-import utils.clean as clean
 
 
 if __name__ == '__main__':
@@ -35,15 +34,16 @@ if __name__ == '__main__':
         # we can check whether it exists.
         logging.getLogger('pipeline')
         logging.basicConfig(
-            filename='example_clean_titanic.log',
+            filename='example_clean_titanic_test.log',
             encoding='utf-8',
             level=logging.DEBUG,
             filemode='w'  # Overwrite the existing file
             )
+        import utils.clean_log as clean
     else:
         # Don't set up logging.
         # Any function here named "log_"... won't do anything useful.
-        pass
+        import utils.clean as clean
 
     log_heading('Titanic data cleaning')
     log_step('Import raw data.')

@@ -389,7 +389,7 @@ def _increase_indent_between_brackets(line, indent='  '):
 
         # Recalculate bracket locations:
         i_brackets = [find_substring(line, c) for c in bracket_list]
-    finished_line += line
+    finished_line += str(line)
     return finished_line
 
 
