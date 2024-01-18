@@ -7,7 +7,7 @@ import pandas as pd
 import logging
 
 from utils.log import log_heading, log_step, log_text, \
-    log_dataframe_contents, set_attrs_name, log_dataframe_stats
+    log_dataframe_contents, log_dataframe_stats
 
 
 if __name__ == '__main__':
@@ -49,12 +49,13 @@ if __name__ == '__main__':
     log_step('Import raw data.')
     df_raw = clean.load_data(f'{dir_in}{file_in}')
     # Rename this DataFrame for the log:
-    df_raw = set_attrs_name(df_raw, 'raw data')
+    df_raw = clean.set_attrs_name(df_raw, 'raw data')
 
     # TO DO - steps to check which columns are missing data,
     # which columns have which data types,
 
-    log_step('Check for missing data.')
+    log_step('Record missing data.')
+    log_dataframe_contents(df_raw)
     series_missing_raw = clean.check_for_missing_data(df_raw)
 
     """ TO DO """
@@ -72,7 +73,7 @@ if __name__ == '__main__':
     log_step('Set up cleaned output DataFrame.')
     df_clean = pd.DataFrame()
     # Rename this DataFrame for the log:
-    df_clean = set_attrs_name(df_clean, 'cleaned data')
+    df_clean = clean.set_attrs_name(df_clean, 'cleaned data')
 
     log_step('Update cleaned dataframe.')
     columns_to_keep = [
@@ -99,11 +100,11 @@ if __name__ == '__main__':
     log_dataframe_contents(df_clean)
 
     # if series_missing_raw.sum() > 0:
-        # TO DO - imputation or deleting steps.
-        # Best placed after the cleaning?
-        # Don't want to impute weird strings or crazy out-of-range values.
-        # print('Sort out missing data')
-        # print(series_missing_raw)
+    # TO DO - imputation or deleting steps.
+    # Best placed after the cleaning?
+    # Don't want to impute weird strings or crazy out-of-range values.
+    # print('Sort out missing data')
+    # print(series_missing_raw)
 
     log_step('Age: impute missing values with median.')
     age, imputed = clean.impute_missing_with_median(df_raw['Age'])

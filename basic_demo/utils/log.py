@@ -196,7 +196,7 @@ def log_function_info(func_module, func_name, func_doc, argspec_sig):
     ]))
 
 
-def log_function_params(fullargspec, kwargs):
+def log_function_params(kwargs):
     """
     Log the names and values of parameters passed to the function.
 
@@ -217,7 +217,7 @@ def log_function_params(fullargspec, kwargs):
     # Get one line per arg or kwarg,
     # "  name=value"
     params_str = ''
-    for a, arg in enumerate(fullargspec[0]):
+    for a, arg in enumerate(list(kwargs.keys())):
         try:
             val = kwarg_names[arg]
         except KeyError:
@@ -392,53 +392,3 @@ def _increase_indent_between_brackets(line, indent='  '):
     finished_line += str(line)
     return finished_line
 
-
-def set_attrs_name(obj: any, obj_name: str):
-    """
-    Store a name for this object in its attrs dict or as Series name.
-
-    Inputs
-    ------
-    obj      - any. e.g. a DataFrame or Series to rename.
-    obj_name - str. Name to be stored.
-    """
-    # * Log the function info and inputs:
-    # -----------------------------------
-    args = locals()
-    f = set_attrs_name
-
-    log_function_info(
-        f.__module__,
-        f.__name__,
-        f.__doc__,
-        inspect.signature(f)
-        )
-    log_function_params(
-        inspect.getfullargspec(f),
-        args
-        )
-
-    # * The actual calculations:
-    # --------------------------
-    if isinstance(obj, pd.Series):
-        # This is a pandas Series.
-        # Update the column name:
-        obj.name = obj_name
-    else:
-        try:
-            o = obj.attrs
-            obj.attrs['name'] = obj_name
-        except AttributeError:
-            # Can't set the attributes for this object.
-            log_text(''.join([
-                'set_attrs_name failed. ',
-                'The input object cannot have a name attribute.'
-                ]))
-
-    # * Log the function outputs:
-    # ---------------------------
-    to_return = (obj, )
-    log_function_output([t for t in to_return])
-    if len(to_return) == 1:
-        to_return = to_return[0]
-    return to_return

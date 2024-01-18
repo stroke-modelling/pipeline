@@ -6,9 +6,12 @@ Assumes that the data is stored as a Pandas DataFrame object.
 import pandas as pd
 
 
-def load_data(path_to_file):
+def load_data(path_to_file: str):
     """Import tabular data from csv."""
-    return pd.read_csv(path_to_file)
+    df = pd.read_csv(path_to_file)
+    # Give a name to this DataFrame:
+    df.attrs['name'] = path_to_file.split('/')[-1]
+    return df
 
 
 def check_for_missing_data(df: pd.DataFrame):
@@ -69,9 +72,7 @@ def apply_one_hot_encoding(series: pd.Series, **kwargs):
     series_ohe - pd.Series. Several columns, now one-hot-encoded.
     """
     # One-hot-encode the series:
-    # TO DO - fix this kwargs argument.
-    # TypeError: get_dummies() got an unexpected keyword argument 'kwargs'
-    df_ohe = pd.get_dummies(series)#, **kwargs)
+    df_ohe = pd.get_dummies(series, **kwargs)
 
     # Set the DataFrame name:
     df_ohe.attrs['name'] = 'ohe'
@@ -308,3 +309,33 @@ def impute_missing_with_missing_label(
     missing.name = 'missing_bool'
 
     return series, missing
+
+
+def set_attrs_name(obj: any, obj_name: str):
+    """
+    Store a name for this object in its attrs dict or as Series name.
+
+    TO DO - find a better home for this!
+
+    Inputs
+    ------
+    obj      - any. e.g. a DataFrame or Series to rename.
+    obj_name - str. Name to be stored.
+    """
+    if isinstance(obj, pd.Series):
+        # This is a pandas Series.
+        # Update the column name:
+        obj.name = obj_name
+    else:
+        try:
+            o = obj.attrs
+            obj.attrs['name'] = obj_name
+        except AttributeError:
+            # # Can't set the attributes for this object.
+            # log_text(''.join([
+            #     'set_attrs_name failed. ',
+            #     'The input object cannot have a name attribute.'
+            #     ]))
+            # # TO DO - FIND A BETTER WAY TO LOG THIS.
+            pass
+    return obj

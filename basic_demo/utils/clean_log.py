@@ -8,13 +8,29 @@ import inspect  # help find names for logging
 
 import utils.clean as clean
 from utils.log import log_function_info, log_function_params, \
-    log_function_output
+    log_function_output, log_text
 
 
 def log_wrapper(f, args):
     """
     Write function, parameters, and results to the log file.
     """
+    # * Separate args and kwargs for the function:
+    # --------------------------------------------
+    try:
+        # Split off kwargs...
+        kwargs = args['kwargs']
+        # ... and remove from args.
+        args.pop('kwargs')
+    except KeyError:
+        # No kwargs given.
+        # Continue as normal.
+        kwargs = {}
+    # Make a new dict of args and kwargs combined:
+    # (this isn't the same as the input "args" because it's
+    # removed a level of nesting dictionaries.)
+    argskwargs = args | kwargs
+
     # * Log the function info and inputs:
     # -----------------------------------
     log_function_info(
@@ -24,19 +40,20 @@ def log_wrapper(f, args):
         inspect.signature(f)
         )
     log_function_params(
-        inspect.getfullargspec(f),
-        args
+        argskwargs
         )
 
     # * The actual calculations:
     # --------------------------
-    to_return = f(**args)
+    to_return = f(**args, **kwargs)
     if not isinstance(to_return, tuple):
         to_return = (to_return, )
 
     # * Log the function outputs:
     # ---------------------------
     log_function_output([t for t in to_return])
+    # Deliberate gap in the log file:
+    log_text('')
     if len(to_return) == 1:
         to_return = to_return[0]
     return to_return
@@ -133,5 +150,17 @@ def impute_missing_with_missing_label(
     """
     args = locals()
     f = clean.impute_missing_with_missing_label
+    to_return = log_wrapper(f, args)
+    return to_return
+
+
+def set_attrs_name(obj: any, obj_name: str):
+    """
+    Wrapper for clean.set_attrs_name().
+
+    TO DO - find a better home for this!
+    """
+    args = locals()
+    f = clean.set_attrs_name
     to_return = log_wrapper(f, args)
     return to_return
