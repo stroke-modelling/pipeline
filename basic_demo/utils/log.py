@@ -3,7 +3,6 @@ Functions to log processes.
 """
 import pandas as pd
 import logging
-import inspect  # help find names for logging
 import io  # To write df.info() output to log.
 
 
@@ -384,4 +383,3 @@ def _increase_indent_between_brackets(line, indent='  '):
         i_brackets = [find_substring(line, c) for c in bracket_list]
     finished_line += str(line)
     return finished_line
-
