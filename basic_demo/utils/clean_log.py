@@ -31,6 +31,8 @@ def log_wrapper(f, args):
     # * The actual calculations:
     # --------------------------
     to_return = f(**args)
+    if not isinstance(to_return, tuple):
+        to_return = (to_return, )
 
     # * Log the function outputs:
     # ---------------------------
@@ -40,14 +42,14 @@ def log_wrapper(f, args):
     return to_return
 
 
-def load_data(path_to_file):
+def load_data(path_to_file: str):
     """
     Wrapper for clean.load_path().
-
-    Don't bother to write this info to the log.
-    TO DO - or do? Log the file name.
     """
-    return clean.load_data(path_to_file)
+    args = locals()
+    f = clean.load_data
+    to_return = log_wrapper(f, args)
+    return to_return
 
 
 def check_for_missing_data(df: pd.DataFrame):
