@@ -4,6 +4,7 @@ Functions to log processes.
 import pandas as pd
 import logging
 import io  # To write df.info() output to log.
+import inspect  # help find names for logging
 
 
 # #####################################
@@ -87,6 +88,39 @@ def log_text(str: str, indent: str = '', w=100):
 # ###########################################
 # ##### Functions to gather info to log #####
 # ###########################################
+def log_wrapper(f, args, kwargs={}):
+    """
+    Write function, parameters, and results to the log file.
+    """
+    # * Log the function info and inputs:
+    # -----------------------------------
+    log_function_info(
+        f.__module__,
+        f.__name__,
+        f.__doc__,
+        inspect.signature(f)
+        )
+    log_function_params(
+        args,
+        kwargs
+        )
+
+    # * The actual calculations:
+    # --------------------------
+    to_return = f(*args, **kwargs)
+
+    # * Log the function outputs:
+    # ---------------------------
+    if not isinstance(to_return, tuple):
+        to_return = (to_return, )
+    log_function_output([t for t in to_return])
+    # Deliberate gap in the log file:
+    log_text('')
+    if len(to_return) == 1:
+        to_return = to_return[0]
+    return to_return
+
+
 def log_dataframe_contents(df):
     """
     Write the info of this DataFrame - columns, missing, dtype.
@@ -188,7 +222,7 @@ def log_function_info(func_module, func_name, func_doc, argspec_sig):
     ]))
 
 
-def log_function_params(kwargs):
+def log_function_params(args, kwargs={}):
     """
     Log the names and values of parameters passed to the function.
 
@@ -198,6 +232,12 @@ def log_function_params(kwargs):
       param1={value or name of param1}
       param2={value or name of param2}
     """
+
+    # # Check the value of each arg.
+    arg_names = []
+    for arg in args:
+        arg_name = find_arg_name(arg)
+        arg_names.append(arg_name)
     # Check the value of each kwarg.
     kwarg_names = {}
     for key, kwarg in zip(kwargs.keys(), kwargs.values()):
@@ -209,12 +249,15 @@ def log_function_params(kwargs):
     # Get one line per arg or kwarg,
     # "  name=value"
     params_str = ''
-    for a, arg in enumerate(list(kwargs.keys())):
+    for a, arg in enumerate(arg_names):
+        params_str += f'{indent}{arg},\n'
+
+    for a, kwarg in enumerate(list(kwargs.keys())):
         try:
-            val = kwarg_names[arg]
+            val = kwarg_names[kwarg]
         except KeyError:
             val = 'None'
-        params_str += f'{indent}{arg}={val},\n'
+        params_str += f'{indent}{kwarg}={val},\n'
 
     params_str = _newline_for_width(params_str, w=100)
 
