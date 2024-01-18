@@ -1,12 +1,5 @@
 """
 Functions to log processes.
-
-Most of the pipeline functions will have the same few lines
-of calls to these log functions within them. This is annoying
-but necessary as placing the copied lines in their own function
-results in RecursionError. The alternative is forcing the user
-to call every function in the form of log(function, parameter_list)
-which is harder to read and to reuse elsewhere without the log.
 """
 import pandas as pd
 import logging
