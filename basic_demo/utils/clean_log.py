@@ -6,13 +6,15 @@ Assumes that the data is stored as a Pandas DataFrame object.
 import pandas as pd
 
 import utils.clean as clean
-from utils.log import log_wrapper
+from utils.log import log_wrapper, log_heading, log_step, log_text, \
+    log_dataframe_contents, log_dataframe_stats, find_arg_name
 
 
 def load_data(*args, **kwargs):
     """
-    Wrapper for clean.load_path().
+    Wrapper for clean.load_data().
     """
+    log_step('Import data.')
     f = clean.load_data
     return log_wrapper(f, args, kwargs)
 
@@ -21,6 +23,9 @@ def check_for_missing_data(*args, **kwargs):
     """
     Wrapper for clean.check_for_missing_data().
     """
+    log_step('Record missing data.')
+    # Assume that the dataframe is the first arg.
+    log_dataframe_contents(args[0])
     f = clean.check_for_missing_data
     return log_wrapper(f, args, kwargs)
 
@@ -45,6 +50,25 @@ def rename_values(*args, **kwargs):
     """
     Wrapper for clean.rename_values().
     """
+    # Set up string for log_step():
+    # Assume that the series is the first arg.
+    series = args[0]
+    series_name = find_arg_name(series)
+    # Assume that the dictionary map is the second arg.
+    dict_map = args[1]
+    if len(dict_map) == 2:
+        # If there are only two things, print it in the
+        # log step.
+        map_str = ''
+        for key, val in zip(dict_map.keys(), dict_map.values()):
+            map_str += f', {key} to {val}'
+        # Remove first comma.
+        map_str = map_str[1:]
+    else:
+        # If the dictionary is too long, don't print it.
+        map_str = ''
+
+    log_step(f'{series_name}: rename values.{map_str}')
     f = clean.rename_values
     return log_wrapper(f, args, kwargs)
 
