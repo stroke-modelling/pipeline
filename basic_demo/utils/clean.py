@@ -4,13 +4,82 @@ Routines for cleaning input dataframe.
 Assumes that the data is stored as a Pandas DataFrame object.
 """
 import pandas as pd
+from utils.log import find_arg_name
 
 
 def load_data(path_to_file: str):
     """Import tabular data from csv."""
     df = pd.read_csv(path_to_file)
     # Give a name to this DataFrame:
-    df.attrs['name'] = path_to_file.split('/')[-1]
+    file_name = path_to_file.split('/')[-1]  # = file.ext
+    file_name = file_name.split('.')[0]      # = file
+    df.attrs['name'] = f'df_{file_name}'
+    return df
+
+
+def add_to_dataframe(df, *args):
+    """
+    Add the given data to the DataFrame.
+
+    FIND A BETTER HOME FOR THIS - TO DO
+    """
+    def _add_series_to_dataframe(df, series):
+        """
+        WRITE ME
+        """
+        series_name = find_arg_name(series)
+        # Check whether a column named this already exists.
+        success = False
+        while success is False:
+            try:
+                df[series_name]
+                # This column already exists, so update
+                # the name of the one we're about to make.
+                series_name += '0'
+            except KeyError:
+                # This column does not exist.
+                success = True
+        df[series_name] = series
+        return df
+
+    def _add_dataframe_to_dataframe(df, df_add):
+        # Check whether any columns already exist.
+        success = False
+        while success is False:
+            if len(set(df.columns) & set(df_add.columns)) == 0:
+                # No overlap between column names.
+                success = True
+            else:
+                # Pick out the repeats:
+                columns_dup = list(set(df.columns) & set(df_add.columns))
+                # Rename repeated columns:
+                df_add = df_add.rename(columns=dict(
+                    zip(columns_dup, [c + '0' for c in columns_dup]))
+                    )
+        # Combine dataframes:
+        df = pd.concat([df, df_add], axis=1)
+        return df
+
+    for arg in args:
+        if isinstance(arg, pd.Series):
+            df = _add_series_to_dataframe(df, arg)
+        elif isinstance(arg, pd.DataFrame):
+            df = _add_dataframe_to_dataframe(df, arg)
+        else:
+            # Turn it into a Series if possible.
+            try:
+                series = pd.Series(arg)
+                arg_name = find_arg_name(arg)
+                if arg_name == arg:
+                    arg_name = '{unnamed}'
+                series.name = arg_name
+                df = _add_series_to_dataframe(df, series)
+            except ():
+                # ... TO DO - some sort of error catching here please.
+                # Can't add this arg to the dataframe.
+                # I can't actually get pandas to crash on purpose to
+                # find out what error type it would be!
+                pass
     return df
 
 
@@ -32,8 +101,9 @@ def check_for_missing_data(df: pd.DataFrame):
     # in each column of df.
     series_missing = df.isna().sum()
 
-    # # Set the series name:
-    series_missing.name = 'missing_data'
+    # Set the series name:
+    input_df_name = find_arg_name(df)
+    series_missing.name = f'{input_df_name}_MissingCount'
     return series_missing
 
 
@@ -71,11 +141,20 @@ def apply_one_hot_encoding(series: pd.Series, **kwargs):
     -------
     series_ohe - pd.Series. Several columns, now one-hot-encoded.
     """
+    input_series_name = find_arg_name(series)
+
+    # If prefix wasn't given, take it now from the input series name:
+    try:
+        prefix = kwargs['prefix']
+    except KeyError:
+        prefix = input_series_name
+        kwargs['prefix'] = prefix
+
     # One-hot-encode the series:
     df_ohe = pd.get_dummies(series, **kwargs)
 
     # Set the DataFrame name:
-    df_ohe.attrs['name'] = 'ohe'
+    df_ohe.attrs['name'] = f'{input_series_name}_OHE'
 
     return df_ohe
 
@@ -124,8 +203,28 @@ def remove_one_hot_encoding(df: pd.DataFrame, columns: list):
     # The values in this Series are the column names from df.
     # The values in col_extract and df remain unchanged.
 
+    # See if there's a common name between the given columns.
+    # Currently this assumes that the common name is at the start
+    # of all column names (as a prefix).
+    common_name = ''
+    i = 1
+    success = False
+    while success is False:
+        try:
+            common_list = [s[:i] for s in columns]
+        except IndexError:
+            # At least one of the column names is too short.
+            # Stop iterating now.
+            success = True
+        if len(set(common_list)) == 1:
+            # Update the common name.
+            common_name = common_list[0]
+        else:
+            # Strings are different. Stop iterating now.
+            success = True
+
     # Set the series name:
-    series.name = 'removed_one_hot'
+    series.name = f'{common_name}_RemovedOHE'
 
     return series
 
@@ -157,6 +256,10 @@ def rename_values(series: pd.Series, dict_map: dict):
     # The "series" object is not changed. The "renamed" object
     # is a copy of the "series" object with the values renamed.
     renamed: pd.Series = series.map(dict_map)
+
+    # Set name of this series:
+    input_series_name = find_arg_name(series)
+    renamed.name = f'{input_series_name}_Renamed'
 
     return renamed
 
@@ -192,14 +295,18 @@ def split_strings_to_columns_by_delimiter(
     df_split - pd.DataFrame. DataFrame of many columns containing the
                split strings.
     """
+    n = find_arg_name(series)
+
     # Split each cell into multiple columns, one new column for
     # each delimiter hit in the original string.
     df_split = series.str.split(delimiter, expand=True)
 
     # Label the new columns for the original series name.
     # Results in names "{series.name}_0", "{series.name}_1" etc.
-    df_split.columns = [f'{series.name}_{i}' for i in df_split.columns]
+    df_split.columns = [f'{n}_{i}' for i in df_split.columns]
 
+    # Name the resulting DataFrame:
+    df_split = set_attrs_name(df_split, f'{n}_SplitByDelimiter')
     return df_split
 
 
@@ -234,7 +341,7 @@ def split_strings_to_columns_by_index(
                split strings.
     """
     # Find the name of the starting series:
-    n = series.name
+    n = find_arg_name(series)
 
     # If the user gave a single split, put it in a list
     # so that the below loop works:
@@ -262,6 +369,9 @@ def split_strings_to_columns_by_index(
         # Place this column in the results DataFrame:
         df_split[f'{n}_{i}'] = series_split
 
+    # Name the resulting DataFrame:
+    df_split = set_attrs_name(df_split, f'{n}_SplitByIndex')
+
     return df_split
 
 
@@ -282,13 +392,14 @@ def impute_missing_with_median(_series: pd.Series):
     series[missing] = median
 
     # Set the series names:
-    series.name = 'imputed_with_median'
-    missing.name = 'missing_bool'
+    input_series_name = find_arg_name(_series)
+    series.name = f'{input_series_name}_ImputedMedian'
+    missing.name = f'{input_series_name}_WasImputedMedian'
 
     return series, missing
 
 
-def impute_missing_with_missing_label(
+def impute_missing_with_label(
         _series: pd.Series,
         label: str = 'missing'
         ):
@@ -305,8 +416,9 @@ def impute_missing_with_missing_label(
     series[missing] = label
 
     # Set the series names:
-    series.name = 'imputed_with_missing_label'
-    missing.name = 'missing_bool'
+    input_series_name = find_arg_name(_series)
+    series.name = f'{input_series_name}_ImputedLabel'
+    missing.name = f'{input_series_name}_WasImputedLabel'
 
     return series, missing
 
@@ -328,7 +440,6 @@ def set_attrs_name(obj: any, obj_name: str):
         obj.name = obj_name
     else:
         try:
-            o = obj.attrs
             obj.attrs['name'] = obj_name
         except AttributeError:
             # # Can't set the attributes for this object.

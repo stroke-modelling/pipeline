@@ -1,0 +1,495 @@
+INFO:pipeline:
+INFO:pipeline:#####################################
+INFO:pipeline:##### titanic.csv data cleaning #####
+INFO:pipeline:#####################################
+INFO:pipeline:
+INFO:pipeline:* Import data.
+INFO:pipeline:--------------
+INFO:pipeline:Import tabular data from csv.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.load_data(
+INFO:pipeline:    path_to_file: str
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  ./input/titanic.csv,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  df_titanic
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Record missing data.
+INFO:pipeline:----------------------
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 12 columns):
+INFO:pipeline: #   Column       Non-Null Count  Dtype  
+INFO:pipeline:---  ------       --------------  -----  
+INFO:pipeline: 0   PassengerId  891 non-null    int64  
+INFO:pipeline: 1   Survived     891 non-null    int64  
+INFO:pipeline: 2   Pclass       891 non-null    int64  
+INFO:pipeline: 3   Name         891 non-null    object 
+INFO:pipeline: 4   Sex          891 non-null    object 
+INFO:pipeline: 5   Age          714 non-null    float64
+INFO:pipeline: 6   SibSp        891 non-null    int64  
+INFO:pipeline: 7   Parch        891 non-null    int64  
+INFO:pipeline: 8   Ticket       891 non-null    object 
+INFO:pipeline: 9   Fare         891 non-null    float64
+INFO:pipeline: 10  Cabin        204 non-null    object 
+INFO:pipeline: 11  Embarked     889 non-null    object 
+INFO:pipeline:dtypes: float64(2), int64(5), object(5)
+INFO:pipeline:Find number of missing entries in each column of DataFrame.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.check_for_missing_data(
+INFO:pipeline:    df: pandas.core.frame.DataFrame
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  df_titanic,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  df_titanic_MissingCount
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Set up cleaned output DataFrame.
+INFO:pipeline:----------------------------------
+INFO:pipeline:Store a name for this object in its attrs dict or as Series name.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.set_attrs_name(
+INFO:pipeline:    obj: <built-in function any>,
+INFO:pipeline:    obj_name: str
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  {unnamed pd.DataFrame},
+INFO:pipeline:  cleaned data,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  cleaned data
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Add data to dataframe.
+INFO:pipeline:------------------------
+INFO:pipeline:FIND A BETTER HOME FOR THIS - TO DO
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.add_to_dataframe(
+INFO:pipeline:    df,
+INFO:pipeline:    *args
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  cleaned data,
+INFO:pipeline:  df_titanic,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  df_titanic
+INFO:pipeline:
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 6 columns):
+INFO:pipeline: #   Column       Non-Null Count  Dtype  
+INFO:pipeline:---  ------       --------------  -----  
+INFO:pipeline: 0   PassengerId  891 non-null    int64  
+INFO:pipeline: 1   Survived     891 non-null    int64  
+INFO:pipeline: 2   Pclass       891 non-null    int64  
+INFO:pipeline: 3   SibSp        891 non-null    int64  
+INFO:pipeline: 4   Parch        891 non-null    int64  
+INFO:pipeline: 5   Fare         891 non-null    float64
+INFO:pipeline:dtypes: float64(1), int64(5)
+INFO:pipeline:
+INFO:pipeline:########################
+INFO:pipeline:##### Process data #####
+INFO:pipeline:########################
+INFO:pipeline:
+INFO:pipeline:* Sex: rename values.
+INFO:pipeline:---------------------
+INFO:pipeline:Make a copy of a pd.Series with the values renamed.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.rename_values(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    dict_map: dict
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  Sex,
+INFO:pipeline:  {'male': True, 'female': False},
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  Sex_Renamed
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Add data to dataframe.
+INFO:pipeline:------------------------
+INFO:pipeline:FIND A BETTER HOME FOR THIS - TO DO
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.add_to_dataframe(
+INFO:pipeline:    df,
+INFO:pipeline:    *args
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  df_titanic,
+INFO:pipeline:  Sex_Renamed,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  df_titanic
+INFO:pipeline:
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 7 columns):
+INFO:pipeline: #   Column       Non-Null Count  Dtype  
+INFO:pipeline:---  ------       --------------  -----  
+INFO:pipeline: 0   PassengerId  891 non-null    int64  
+INFO:pipeline: 1   Survived     891 non-null    int64  
+INFO:pipeline: 2   Pclass       891 non-null    int64  
+INFO:pipeline: 3   SibSp        891 non-null    int64  
+INFO:pipeline: 4   Parch        891 non-null    int64  
+INFO:pipeline: 5   Fare         891 non-null    float64
+INFO:pipeline: 6   Sex_Renamed  891 non-null    bool   
+INFO:pipeline:dtypes: bool(1), float64(1), int64(5)
+INFO:pipeline:
+INFO:pipeline:* Age: impute missing values with median.
+INFO:pipeline:-----------------------------------------
+INFO:pipeline:Replace missing values in a Pandas series with median.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.impute_missing_with_median(
+INFO:pipeline:    _series: pandas.core.series.Series
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  Age,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  Age_ImputedMedian,
+INFO:pipeline:  Age_WasImputedMedian
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Add data to dataframe.
+INFO:pipeline:------------------------
+INFO:pipeline:FIND A BETTER HOME FOR THIS - TO DO
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.add_to_dataframe(
+INFO:pipeline:    df,
+INFO:pipeline:    *args
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  df_titanic,
+INFO:pipeline:  Age_ImputedMedian,
+INFO:pipeline:  Age_WasImputedMedian,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  df_titanic
+INFO:pipeline:
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 9 columns):
+INFO:pipeline: #   Column                Non-Null Count  Dtype  
+INFO:pipeline:---  ------                --------------  -----  
+INFO:pipeline: 0   PassengerId           891 non-null    int64  
+INFO:pipeline: 1   Survived              891 non-null    int64  
+INFO:pipeline: 2   Pclass                891 non-null    int64  
+INFO:pipeline: 3   SibSp                 891 non-null    int64  
+INFO:pipeline: 4   Parch                 891 non-null    int64  
+INFO:pipeline: 5   Fare                  891 non-null    float64
+INFO:pipeline: 6   Sex_Renamed           891 non-null    bool   
+INFO:pipeline: 7   Age_ImputedMedian     891 non-null    float64
+INFO:pipeline: 8   Age_WasImputedMedian  891 non-null    bool   
+INFO:pipeline:dtypes: bool(2), float64(2), int64(5)
+INFO:pipeline:
+INFO:pipeline:* Embarked: impute missing values with label.
+INFO:pipeline:---------------------------------------------
+INFO:pipeline:Replace missing values in a Pandas series with the text 'missing'
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.impute_missing_with_label(
+INFO:pipeline:    _series: pandas.core.series.Series,
+INFO:pipeline:    label: str = 'missing'
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  Embarked,
+INFO:pipeline:  label=missing,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  Embarked_ImputedLabel,
+INFO:pipeline:  Embarked_WasImputedLabel
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Embarked_ImputedLabel: one-hot-encode.
+INFO:pipeline:----------------------------------------
+INFO:pipeline:Convert a single column to several one-hot encoded columns.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.apply_one_hot_encoding(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    **kwargs
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  Embarked_ImputedLabel,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  Embarked_ImputedLabel_OHE
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Add data to dataframe.
+INFO:pipeline:------------------------
+INFO:pipeline:FIND A BETTER HOME FOR THIS - TO DO
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.add_to_dataframe(
+INFO:pipeline:    df,
+INFO:pipeline:    *args
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  df_titanic,
+INFO:pipeline:  Embarked_ImputedLabel_OHE,
+INFO:pipeline:  Embarked_WasImputedLabel,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  {unnamed pd.DataFrame}
+INFO:pipeline:
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 14 columns):
+INFO:pipeline: #   Column                         Non-Null Count  Dtype  
+INFO:pipeline:---  ------                         --------------  -----  
+INFO:pipeline: 0   PassengerId                    891 non-null    int64  
+INFO:pipeline: 1   Survived                       891 non-null    int64  
+INFO:pipeline: 2   Pclass                         891 non-null    int64  
+INFO:pipeline: 3   SibSp                          891 non-null    int64  
+INFO:pipeline: 4   Parch                          891 non-null    int64  
+INFO:pipeline: 5   Fare                           891 non-null    float64
+INFO:pipeline: 6   Sex_Renamed                    891 non-null    bool   
+INFO:pipeline: 7   Age_ImputedMedian              891 non-null    float64
+INFO:pipeline: 8   Age_WasImputedMedian           891 non-null    bool   
+INFO:pipeline: 9   Embarked_ImputedLabel_C        891 non-null    bool   
+INFO:pipeline: 10  Embarked_ImputedLabel_Q        891 non-null    bool   
+INFO:pipeline: 11  Embarked_ImputedLabel_S        891 non-null    bool   
+INFO:pipeline: 12  Embarked_ImputedLabel_missing  891 non-null    bool   
+INFO:pipeline: 13  Embarked_WasImputedLabel       891 non-null    bool   
+INFO:pipeline:dtypes: bool(7), float64(2), int64(5)
+INFO:pipeline:
+INFO:pipeline:* Cabin: split into multiple columns.
+INFO:pipeline:-------------------------------------
+INFO:pipeline:Split column strings by a delimiter, store in multiple columns.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.split_strings_to_columns_by_delimiter(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    delimiter: str = ',
+INFO:pipeline:    '
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  Cabin,
+INFO:pipeline:  delimiter= ,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  Cabin_SplitByDelimiter
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Cabin_0: split into multiple columns.
+INFO:pipeline:---------------------------------------
+INFO:pipeline:Split column strings at given indices, store in multiple columns.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.split_strings_to_columns_by_index(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    split_index: 'int | list'
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  Cabin_0,
+INFO:pipeline:  split_index=1,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  Cabin_0_SplitByIndex
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* CabinLetter: impute missing values with label.
+INFO:pipeline:------------------------------------------------
+INFO:pipeline:Replace missing values in a Pandas series with the text 'missing'
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.impute_missing_with_label(
+INFO:pipeline:    _series: pandas.core.series.Series,
+INFO:pipeline:    label: str = 'missing'
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  CabinLetter,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  CabinLetter_ImputedLabel,
+INFO:pipeline:  CabinLetter_WasImputedLabel
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* CabinLetter_ImputedLabel: one-hot-encode.
+INFO:pipeline:-------------------------------------------
+INFO:pipeline:Convert a single column to several one-hot encoded columns.
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.apply_one_hot_encoding(
+INFO:pipeline:    series: pandas.core.series.Series,
+INFO:pipeline:    **kwargs
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  CabinLetter_ImputedLabel,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  CabinLetter_ImputedLabel_OHE
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Add data to dataframe.
+INFO:pipeline:------------------------
+INFO:pipeline:FIND A BETTER HOME FOR THIS - TO DO
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.add_to_dataframe(
+INFO:pipeline:    df,
+INFO:pipeline:    *args
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  {unnamed pd.DataFrame},
+INFO:pipeline:  CabinLetter_ImputedLabel_OHE,
+INFO:pipeline:  CabinLetter_WasImputedLabel,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  {unnamed pd.DataFrame}
+INFO:pipeline:
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 24 columns):
+INFO:pipeline: #   Column                            Non-Null Count  Dtype  
+INFO:pipeline:---  ------                            --------------  -----  
+INFO:pipeline: 0   PassengerId                       891 non-null    int64  
+INFO:pipeline: 1   Survived                          891 non-null    int64  
+INFO:pipeline: 2   Pclass                            891 non-null    int64  
+INFO:pipeline: 3   SibSp                             891 non-null    int64  
+INFO:pipeline: 4   Parch                             891 non-null    int64  
+INFO:pipeline: 5   Fare                              891 non-null    float64
+INFO:pipeline: 6   Sex_Renamed                       891 non-null    bool   
+INFO:pipeline: 7   Age_ImputedMedian                 891 non-null    float64
+INFO:pipeline: 8   Age_WasImputedMedian              891 non-null    bool   
+INFO:pipeline: 9   Embarked_ImputedLabel_C           891 non-null    bool   
+INFO:pipeline: 10  Embarked_ImputedLabel_Q           891 non-null    bool   
+INFO:pipeline: 11  Embarked_ImputedLabel_S           891 non-null    bool   
+INFO:pipeline: 12  Embarked_ImputedLabel_missing     891 non-null    bool   
+INFO:pipeline: 13  Embarked_WasImputedLabel          891 non-null    bool   
+INFO:pipeline: 14  CabinLetter_ImputedLabel_A        891 non-null    bool   
+INFO:pipeline: 15  CabinLetter_ImputedLabel_B        891 non-null    bool   
+INFO:pipeline: 16  CabinLetter_ImputedLabel_C        891 non-null    bool   
+INFO:pipeline: 17  CabinLetter_ImputedLabel_D        891 non-null    bool   
+INFO:pipeline: 18  CabinLetter_ImputedLabel_E        891 non-null    bool   
+INFO:pipeline: 19  CabinLetter_ImputedLabel_F        891 non-null    bool   
+INFO:pipeline: 20  CabinLetter_ImputedLabel_G        891 non-null    bool   
+INFO:pipeline: 21  CabinLetter_ImputedLabel_T        891 non-null    bool   
+INFO:pipeline: 22  CabinLetter_ImputedLabel_missing  891 non-null    bool   
+INFO:pipeline: 23  CabinLetter_WasImputedLabel       891 non-null    bool   
+INFO:pipeline:dtypes: bool(17), float64(2), int64(5)
+INFO:pipeline:
+INFO:pipeline:* CabinNumber: impute missing values with label.
+INFO:pipeline:------------------------------------------------
+INFO:pipeline:Replace missing values in a Pandas series with the text 'missing'
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.impute_missing_with_label(
+INFO:pipeline:    _series: pandas.core.series.Series,
+INFO:pipeline:    label: str = 'missing'
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  CabinNumber,
+INFO:pipeline:  label=0,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  CabinNumber_ImputedLabel,
+INFO:pipeline:  CabinNumber_WasImputedLabel
+INFO:pipeline:
+INFO:pipeline:
+INFO:pipeline:* Add data to dataframe.
+INFO:pipeline:------------------------
+INFO:pipeline:FIND A BETTER HOME FOR THIS - TO DO
+INFO:pipeline:Run this function:
+INFO:pipeline:  utils.clean.add_to_dataframe(
+INFO:pipeline:    df,
+INFO:pipeline:    *args
+INFO:pipeline:  )
+INFO:pipeline:With these parameters:
+INFO:pipeline:  {unnamed pd.DataFrame},
+INFO:pipeline:  CabinNumber_ImputedLabel,
+INFO:pipeline:  CabinNumber_WasImputedLabel,
+INFO:pipeline:
+INFO:pipeline:Giving the following as output:
+INFO:pipeline:  {unnamed pd.DataFrame}
+INFO:pipeline:
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 26 columns):
+INFO:pipeline: #   Column                            Non-Null Count  Dtype  
+INFO:pipeline:---  ------                            --------------  -----  
+INFO:pipeline: 0   PassengerId                       891 non-null    int64  
+INFO:pipeline: 1   Survived                          891 non-null    int64  
+INFO:pipeline: 2   Pclass                            891 non-null    int64  
+INFO:pipeline: 3   SibSp                             891 non-null    int64  
+INFO:pipeline: 4   Parch                             891 non-null    int64  
+INFO:pipeline: 5   Fare                              891 non-null    float64
+INFO:pipeline: 6   Sex_Renamed                       891 non-null    bool   
+INFO:pipeline: 7   Age_ImputedMedian                 891 non-null    float64
+INFO:pipeline: 8   Age_WasImputedMedian              891 non-null    bool   
+INFO:pipeline: 9   Embarked_ImputedLabel_C           891 non-null    bool   
+INFO:pipeline: 10  Embarked_ImputedLabel_Q           891 non-null    bool   
+INFO:pipeline: 11  Embarked_ImputedLabel_S           891 non-null    bool   
+INFO:pipeline: 12  Embarked_ImputedLabel_missing     891 non-null    bool   
+INFO:pipeline: 13  Embarked_WasImputedLabel          891 non-null    bool   
+INFO:pipeline: 14  CabinLetter_ImputedLabel_A        891 non-null    bool   
+INFO:pipeline: 15  CabinLetter_ImputedLabel_B        891 non-null    bool   
+INFO:pipeline: 16  CabinLetter_ImputedLabel_C        891 non-null    bool   
+INFO:pipeline: 17  CabinLetter_ImputedLabel_D        891 non-null    bool   
+INFO:pipeline: 18  CabinLetter_ImputedLabel_E        891 non-null    bool   
+INFO:pipeline: 19  CabinLetter_ImputedLabel_F        891 non-null    bool   
+INFO:pipeline: 20  CabinLetter_ImputedLabel_G        891 non-null    bool   
+INFO:pipeline: 21  CabinLetter_ImputedLabel_T        891 non-null    bool   
+INFO:pipeline: 22  CabinLetter_ImputedLabel_missing  891 non-null    bool   
+INFO:pipeline: 23  CabinLetter_WasImputedLabel       891 non-null    bool   
+INFO:pipeline: 24  CabinNumber_ImputedLabel          891 non-null    object 
+INFO:pipeline: 25  CabinNumber_WasImputedLabel       891 non-null    bool   
+INFO:pipeline:dtypes: bool(18), float64(2), int64(5), object(1)
+INFO:pipeline:
+INFO:pipeline:##################
+INFO:pipeline:##### Result #####
+INFO:pipeline:##################
+INFO:pipeline:
+INFO:pipeline:* Contents of cleaned dataframe.
+INFO:pipeline:--------------------------------
+INFO:pipeline:<class 'pandas.core.frame.DataFrame'>
+INFO:pipeline:RangeIndex: 891 entries, 0 to 890
+INFO:pipeline:Data columns (total 26 columns):
+INFO:pipeline: #   Column                            Non-Null Count  Dtype  
+INFO:pipeline:---  ------                            --------------  -----  
+INFO:pipeline: 0   PassengerId                       891 non-null    Int64  
+INFO:pipeline: 1   Survived                          891 non-null    Int64  
+INFO:pipeline: 2   Pclass                            891 non-null    Int64  
+INFO:pipeline: 3   SibSp                             891 non-null    Int64  
+INFO:pipeline: 4   Parch                             891 non-null    Int64  
+INFO:pipeline: 5   Fare                              891 non-null    Float64
+INFO:pipeline: 6   Sex_Renamed                       891 non-null    boolean
+INFO:pipeline: 7   Age_ImputedMedian                 891 non-null    Float64
+INFO:pipeline: 8   Age_WasImputedMedian              891 non-null    boolean
+INFO:pipeline: 9   Embarked_ImputedLabel_C           891 non-null    boolean
+INFO:pipeline: 10  Embarked_ImputedLabel_Q           891 non-null    boolean
+INFO:pipeline: 11  Embarked_ImputedLabel_S           891 non-null    boolean
+INFO:pipeline: 12  Embarked_ImputedLabel_missing     891 non-null    boolean
+INFO:pipeline: 13  Embarked_WasImputedLabel          891 non-null    boolean
+INFO:pipeline: 14  CabinLetter_ImputedLabel_A        891 non-null    boolean
+INFO:pipeline: 15  CabinLetter_ImputedLabel_B        891 non-null    boolean
+INFO:pipeline: 16  CabinLetter_ImputedLabel_C        891 non-null    boolean
+INFO:pipeline: 17  CabinLetter_ImputedLabel_D        891 non-null    boolean
+INFO:pipeline: 18  CabinLetter_ImputedLabel_E        891 non-null    boolean
+INFO:pipeline: 19  CabinLetter_ImputedLabel_F        891 non-null    boolean
+INFO:pipeline: 20  CabinLetter_ImputedLabel_G        891 non-null    boolean
+INFO:pipeline: 21  CabinLetter_ImputedLabel_T        891 non-null    boolean
+INFO:pipeline: 22  CabinLetter_ImputedLabel_missing  891 non-null    boolean
+INFO:pipeline: 23  CabinLetter_WasImputedLabel       891 non-null    boolean
+INFO:pipeline: 24  CabinNumber_ImputedLabel          891 non-null    object 
+INFO:pipeline: 25  CabinNumber_WasImputedLabel       891 non-null    boolean
+INFO:pipeline:dtypes: Float64(2), Int64(5), boolean(18), object(1)
+INFO:pipeline:                   count       mean         std   min     25%      50%    75%       ma
+INFO:pipeline:x
+INFO:pipeline:PassengerId        891.0      446.0  257.353842   1.0   223.5    446.0  668.5     891.
+INFO:pipeline:0
+INFO:pipeline:Survived           891.0   0.383838    0.486592   0.0     0.0      0.0    1.0       1.
+INFO:pipeline:0
+INFO:pipeline:Pclass             891.0   2.308642    0.836071   1.0     2.0      3.0    3.0       3.
+INFO:pipeline:0
+INFO:pipeline:SibSp              891.0   0.523008    1.102743   0.0     0.0      0.0    1.0       8.
+INFO:pipeline:0
+INFO:pipeline:Parch              891.0   0.381594    0.806057   0.0     0.0      0.0    0.0       6.
+INFO:pipeline:0
+INFO:pipeline:Fare               891.0  32.204208   49.693429   0.0  7.9104  14.4542   31.0  512.329
+INFO:pipeline:2
+INFO:pipeline:Age_ImputedMedian  891.0  29.361582   13.019697  0.42    22.0     28.0   35.0      80.
+INFO:pipeline:0
+INFO:pipeline:
+INFO:pipeline:* Save cleaned dataframe to file.
+INFO:pipeline:---------------------------------
+INFO:pipeline:./output/titanic_cleaned.csv
